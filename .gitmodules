@@ -4,3 +4,6 @@
 [submodule "src/external/imgui-sfml"]
 	path = src/external/imgui-sfml
 	url = https://github.com/eliasdaler/imgui-sfml
+[submodule "src/external/FastNoise"]
+	path = src/external/FastNoise
+	url = https://github.com/Auburns/FastNoise
