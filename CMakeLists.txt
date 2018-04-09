@@ -43,10 +43,19 @@ include_directories(
 	${OPENGL_INCLUDE_DIR}
 )
 
-add_executable(${PROJECT_NAME}
-    src/main.cpp
+# Imgui Project Dependencies
+add_library(imgui_deps
     ${IMGUI_SOURCES}
     ${IMGUI_SFML_SOURCES}
+)
+
+set_target_properties(imgui_deps PROPERTIES
+    COMPILE_FLAGS "-DIMGUI_USER_CONFIG=${IMCONFIG}"
+)
+
+# Map Generator
+add_executable(${PROJECT_NAME}
+    src/main.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -54,6 +63,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(${PROJECT_NAME}
+	imgui_deps
     ${SFML_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
 )

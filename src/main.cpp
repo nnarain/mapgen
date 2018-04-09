@@ -8,12 +8,9 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(640, 480), "ImGui + SFML = <3");
+	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
-
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
 
 	sf::Clock deltaClock;
 	while (window.isOpen()) {
@@ -30,12 +27,7 @@ int main()
 
 		ImGui::ShowTestWindow();
 
-		ImGui::Begin("Hello, world!");
-		ImGui::Button("Look at this pretty button");
-		ImGui::End();
-
-		window.clear();
-		window.draw(shape);
+		window.clear(sf::Color(255,255,255,255));
 		ImGui::SFML::Render(window);
 		window.display();
 	}
