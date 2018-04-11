@@ -1,4 +1,4 @@
-# mapgen-rs
+# mapgen
 
-Experiment with procedural map generation in rust.
+Experiment with procedural map generation.
 
