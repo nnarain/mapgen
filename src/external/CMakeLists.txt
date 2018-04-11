@@ -1,14 +1,14 @@
 ############################
 ### Imgui and Imgui SFML ###
 ############################
-set(IMGUI_INCLUDE_DIRS_INTERNAL
-    imgui/
-    imgui-sfml/
-)
-set(IMGUI_INCLUDE_DIRS ${IMGUI_INCLUDE_DIRS_INTERNAL} PARENT_SCOPE)
-
 set(IMGUI_PATH "${CMAKE_CURRENT_LIST_DIR}/imgui")
 set(IMGUI_SFML_PATH "${CMAKE_CURRENT_LIST_DIR}/imgui-sfml")
+
+set(IMGUI_INCLUDE_DIRS_INTERNAL
+    ${IMGUI_PATH}
+    ${IMGUI_SFML_PATH}
+)
+set(IMGUI_INCLUDE_DIRS ${IMGUI_INCLUDE_DIRS_INTERNAL} PARENT_SCOPE)
 
 set(IMCONFIG "<imconfig-SFML.h>")
 
@@ -38,11 +38,10 @@ target_link_libraries(imgui
 #################
 ### FastNoise ###
 #################
-set(FASTNOISE_INCLUDE_DIRS
-    FastNoise/
-
-    PARENT_SCOPE
+set(FASTNOISE_INCLUDE_DIRS_INTERNAL
+    ${CMAKE_CURRENT_LIST_DIR}/FastNoise/
 )
+set(FASTNOISE_INCLUDE_DIRS ${FASTNOISE_INCLUDE_DIRS_INTERNAL} PARENT_SCOPE)
 
 add_library(fastnoise
     FastNoise/FastNoise.cpp
