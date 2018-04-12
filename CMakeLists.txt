@@ -22,9 +22,19 @@ include_directories(
     ${FASTNOISE_INCLUDE_DIRS}
 )
 
+set(HEADERS
+    include/windows/window.h
+    include/windows/config_window.h
+    include/windows/map_display_window.h
+
+    include/configuration.h
+)
+
 # Map Generator
 add_executable(${PROJECT_NAME}
     src/main.cpp
+
+    ${HEADERS}
 )
 
 target_link_libraries(${PROJECT_NAME}
