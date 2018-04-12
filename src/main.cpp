@@ -1,41 +1,13 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
-#include "FastNoise.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 
-#include <vector>
+#include "windows/map_display_window.h"
+#include "windows/config_window.h"
 
-
-sf::Texture makeTexture(int w, int h)
-{
-	sf::Texture texture;
-	texture.create(w, h);
-
-	sf::Image img;
-	img.create(w, h);
-
-	FastNoise noise;
-	noise.SetNoiseType(FastNoise::NoiseType::Cellular);
-
-	for (int x = 0; x < w; ++x)
-	{
-		for (int y = 0; y < h; ++y)
-		{
-			auto sample = noise.GetNoise(x, y);
-			auto value = (int)(sample * 255.f);
-			img.setPixel(x, y, sf::Color(value, value, value, 255));
-		}
-	}
-
-	texture.update(img);
-
-	return texture;
-}
 
 int main()
 {
@@ -43,38 +15,40 @@ int main()
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
 
-	auto myTexture = makeTexture(512, 512);
-	sf::Sprite sprite;
-	sprite.setTexture(myTexture);
+	ConfigWindow config_window;
+	MapDisplayWindow map_display_window(512, 512);
 
 	sf::Clock deltaClock;
-	while (window.isOpen()) {
+
+	while (window.isOpen()) 
+	{
+		// poll events
 		sf::Event event;
-		while (window.pollEvent(event)) {
+		while (window.pollEvent(event))
+		{
+			// pass events to imgui
 			ImGui::SFML::ProcessEvent(event);
 
-			if (event.type == sf::Event::Closed) {
+			if (event.type == sf::Event::Closed)
+			{
 				window.close();
 			}
 		}
 
+		// update imgui
 		ImGui::SFML::Update(window, deltaClock.restart());
+		
+		// draw gui
+		config_window.render(window);
+		map_display_window.render(window);
 
-		if (ImGui::Begin("Map"))
+		if (config_window.updated())
 		{
-			auto size = ImGui::GetWindowSize();
-			auto xScale = size.x / myTexture.getSize().x;
-			auto yScale = size.y / myTexture.getSize().y;
-
-			float factor = 0.90f;
-			sprite.setScale(xScale * factor, yScale * factor);
-
-			ImGui::Image(sprite);
-			
-			ImGui::End();
+			const auto& config = config_window.getConfiguration();
 		}
 
-		window.clear(sf::Color(255,255,255,255));
+		// re-draw the screen
+		window.clear(sf::Color(255, 255, 255, 255));
 		ImGui::SFML::Render(window);
 		window.display();
 	}
