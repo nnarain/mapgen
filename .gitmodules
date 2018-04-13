@@ -7,3 +7,6 @@
 [submodule "src/external/FastNoise"]
 	path = src/external/FastNoise
 	url = https://github.com/Auburns/FastNoise
+[submodule "src/external/yaml-cpp"]
+	path = src/external/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp

@@ -20,6 +20,7 @@ include_directories(
     include/
     ${IMGUI_INCLUDE_DIRS}
     ${FASTNOISE_INCLUDE_DIRS}
+    ${YAML_CPP_INCLUDE_DIR}
 )
 
 set(HEADERS
@@ -39,7 +40,8 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
 	imgui
-	fastnoise
+    fastnoise
+    yaml-cpp
     ${SFML_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
 )

@@ -8,9 +8,18 @@
 #include "windows/map_display_window.h"
 #include "windows/parameter_window.h"
 
+#include <iostream>
 
-int main()
+
+int main(int argc, char *argv[])
 {
+	if (argc < 2)
+	{
+		std::cerr << "Invalid number of arguments" << std::endl;
+		return 1;
+	}
+
+
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
