@@ -6,16 +6,28 @@
 #include <SFML/Window/Event.hpp>
 
 #include "windows/map_display_window.h"
-#include "windows/config_window.h"
+#include "windows/parameter_window.h"
+#include "parameters/parameter_loader.h"
+
+#include <iostream>
 
 
-int main()
+int main(int argc, char *argv[])
 {
+	if (argc < 2)
+	{
+		std::cerr << "Invalid number of arguments" << std::endl;
+		return 1;
+	}
+
+	const std::string param_file(argv[1]);
+	ParameterLoader loader(param_file);
+
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
 
-	ConfigWindow config_window;
+	ParameterWindow config_window;
 	MapDisplayWindow map_display_window(512, 512);
 
 	sf::Clock deltaClock;
@@ -39,7 +51,7 @@ int main()
 		ImGui::SFML::Update(window, deltaClock.restart());
 		
 		// draw gui
-		config_window.render(window);
+		config_window.render(window, loader.getParams());
 		map_display_window.render(window);
 
 		if (config_window.updated())

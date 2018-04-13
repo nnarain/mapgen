@@ -6,7 +6,7 @@
 class Window
 {
 public:
-	virtual void render(sf::Window& window) = 0;
+	virtual void render(sf::Window& window) {}
 };
 
 #endif  // WINDOWS_WINDOW_H

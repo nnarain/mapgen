@@ -1,0 +1,15 @@
+Map 1:
+  height:
+    noise_type: simplex
+    octaves: 6
+    gain: 0.5
+
+  scale_factor: 1
+
+Map 2:
+  height1:
+    noise_type: perlin
+  height2:
+    noise_type: value
+
+  secret value: 3.14

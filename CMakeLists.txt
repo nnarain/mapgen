@@ -20,14 +20,17 @@ include_directories(
     include/
     ${IMGUI_INCLUDE_DIRS}
     ${FASTNOISE_INCLUDE_DIRS}
+    ${YAML_CPP_INCLUDE_DIR}
 )
 
 set(HEADERS
     include/windows/window.h
-    include/windows/config_window.h
+    include/windows/parameter_window.h
     include/windows/map_display_window.h
 
-    include/configuration.h
+    include/parameters/parameter_loader.h
+    include/parameters/noise_parameters.h
+    include/parameters/parameter_value.h
 )
 
 # Map Generator
@@ -39,7 +42,8 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
 	imgui
-	fastnoise
+    fastnoise
+    yaml-cpp
     ${SFML_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
 )
