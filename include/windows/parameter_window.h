@@ -2,23 +2,62 @@
 #define WINDOWS_CONFIG_WINDOW_H
 
 #include "windows/window.h"
+#include "parameters/parameter_value.h"
 #include "parameters/noise_parameters.h"
 
 #include <imgui.h>
 
+#include <string>
+#include <map>
+
 class ParameterWindow : Window
 {
+	using GeneratorParameters = std::map<std::string, ParameterValue>;
+
 public:
 	ParameterWindow() : updated_(false)
 	{
 
 	}
 
-	virtual void render(sf::Window& window) override
+	void render(sf::Window& window, std::map<std::string, GeneratorParameters>& params)
 	{
 		if (ImGui::Begin("Parameters", &opened_))
 		{
-			renderParams(params_);
+			for (auto& it : params)
+			{
+				auto& name = it.first;
+				auto& params = it.second;
+
+				ImGui::Text(name.c_str());
+
+				for (auto& it : params)
+				{
+					auto& field_name = it.first;
+					auto& param_value = it.second;
+
+					if (param_value.type == ParameterValue::Type::Scalar)
+					{
+						ImGui::InputFloat(field_name.c_str(), &param_value.param.value);
+					}
+					else if (param_value.type == ParameterValue::Type::Noise)
+					{
+						if (ImGui::TreeNode(&field_name, field_name.c_str()))
+						{
+							renderNoiseParams(param_value.param.noise);
+							ImGui::TreePop();
+						}
+					}
+				}
+
+				ImGui::Separator();
+			}
+
+			if (ImGui::Button("Save"))
+			{
+				// ...
+			}
+
 			ImGui::End();
 		}
 	}
@@ -34,7 +73,7 @@ public:
 	}
 
 private:
-	void renderParams(NoiseParameters& params)
+	void renderNoiseParams(NoiseParameters& params)
 	{
 		static const char* noise_types[] = {
 			"Value", "Value Fractal", "Perlin", "Perlin Fractal", "Simplex", "Simplex Fractal",

@@ -28,7 +28,9 @@ set(HEADERS
     include/windows/parameter_window.h
     include/windows/map_display_window.h
 
+    include/parameters/parameter_loader.h
     include/parameters/noise_parameters.h
+    include/parameters/parameter_value.h
 )
 
 # Map Generator

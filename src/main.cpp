@@ -7,6 +7,7 @@
 
 #include "windows/map_display_window.h"
 #include "windows/parameter_window.h"
+#include "parameters/parameter_loader.h"
 
 #include <iostream>
 
@@ -19,6 +20,8 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	const std::string param_file(argv[1]);
+	ParameterLoader loader(param_file);
 
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
 	window.setFramerateLimit(60);
@@ -48,7 +51,7 @@ int main(int argc, char *argv[])
 		ImGui::SFML::Update(window, deltaClock.restart());
 		
 		// draw gui
-		config_window.render(window);
+		config_window.render(window, loader.getParams());
 		map_display_window.render(window);
 
 		if (config_window.updated())
