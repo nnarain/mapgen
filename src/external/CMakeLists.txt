@@ -50,3 +50,14 @@ add_library(fastnoise
 target_include_directories(fastnoise PRIVATE
     ${FASTNOISE_INCLUDE_DIRS}
 )
+
+################
+### YAML CPP ###
+################
+
+set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "Enable testing")
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "Enable parse tools")
+set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "Enable contrib")
+add_subdirectory(yaml-cpp)
+
+set(YAML_CPP_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/yaml-cpp/include", PARENT_SCOPE)
