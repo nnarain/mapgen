@@ -24,10 +24,10 @@ include_directories(
 
 set(HEADERS
     include/windows/window.h
-    include/windows/config_window.h
+    include/windows/parameter_window.h
     include/windows/map_display_window.h
 
-    include/configuration.h
+    include/parameters/noise_parameters.h
 )
 
 # Map Generator

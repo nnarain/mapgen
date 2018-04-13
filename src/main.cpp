@@ -6,7 +6,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "windows/map_display_window.h"
-#include "windows/config_window.h"
+#include "windows/parameter_window.h"
 
 
 int main()
@@ -15,7 +15,7 @@ int main()
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
 
-	ConfigWindow config_window;
+	ParameterWindow config_window;
 	MapDisplayWindow map_display_window(512, 512);
 
 	sf::Clock deltaClock;
