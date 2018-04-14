@@ -31,12 +31,23 @@ set(HEADERS
     include/parameters/parameter_loader.h
     include/parameters/noise_parameters.h
     include/parameters/parameter_value.h
+    include/generator/map_generator.h
+    include/generator/map_generator_manager.h
+    include/generator/generator_buffer.h
+    include/generator/pixel.h
+
+    include/imgui_extension/imgui_extension.h
+
+    include/factory/fastnoise_factory.h
+
+    include/fastnoise_generator.h
 )
 
 # Map Generator
 add_executable(${PROJECT_NAME}
     src/main.cpp
     src/parameters/parameter_loader.cpp
+    src/imgui_extension/imgui_extension.cpp
 
     ${HEADERS}
 )

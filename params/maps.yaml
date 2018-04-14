@@ -1,15 +1,7 @@
-Map 1:
-  height:
+FastNoise:
+  noise:
     noise_type: simplex
-    octaves: 6
+    frequency: 0.025
+    octaves: 4
     gain: 0.5
 
-  scale_factor: 1
-
-Map 2:
-  height1:
-    noise_type: perlin
-  height2:
-    noise_type: value
-
-  secret value: 3.14
