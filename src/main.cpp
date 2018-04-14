@@ -8,6 +8,8 @@
 #include "windows/map_display_window.h"
 #include "windows/parameter_window.h"
 #include "parameters/parameter_loader.h"
+#include "generator/map_generator.h"
+#include "generator/map_generator_manager.h"
 
 #include <iostream>
 
@@ -27,8 +29,15 @@ int main(int argc, char *argv[])
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
 
+	std::vector<MapGenerator::Ptr> generators;
+	generators.push_back(std::make_unique<MapGenerator>());
+	generators.push_back(std::make_unique<MapGenerator>());
+
+
+	MapGeneratorManager generator_manager(generators);
+
 	ParameterWindow parameter_window(loader.getParams());
-	MapDisplayWindow map_display_window(512, 512);
+	MapDisplayWindow map_display_window(generator_manager);
 
 	sf::Clock deltaClock;
 
@@ -54,10 +63,7 @@ int main(int argc, char *argv[])
 		bool updated = parameter_window.update();
 		map_display_window.update();
 
-		if (updated)
-		{
-			std::cout << "Parameters Updated\n";
-		}
+		//ImGui::ShowDemoWindow();
 
 		// re-draw the screen
 		window.clear(sf::Color(255, 255, 255, 255));

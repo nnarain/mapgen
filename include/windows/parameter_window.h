@@ -42,13 +42,13 @@ public:
 
 					if (param_value.type == ParameterValue::Type::Scalar)
 					{
-						param_updated = param_updated || ImGui::InputFloat(field_name.c_str(), &param_value.param.value);
+						param_updated = ImGui::InputFloat(field_name.c_str(), &param_value.param.value) || param_updated;
 					}
 					else if (param_value.type == ParameterValue::Type::Noise)
 					{
 						if (ImGui::TreeNode(&field_name, field_name.c_str()))
 						{
-							param_updated = param_updated || renderNoiseParams(param_value.param.noise);
+							param_updated = renderNoiseParams(param_value.param.noise) || param_updated;
 							ImGui::TreePop();
 						}
 					}
@@ -83,14 +83,14 @@ private:
 		};
 
 		bool param_updated = false;
-		param_updated = param_updated || ImGui::Combo("Noise Type", &params.noise_type, noise_types, IM_ARRAYSIZE(noise_types));
-		param_updated = param_updated || ImGui::Combo("Interp Type", &params.interp_type, interp_types, IM_ARRAYSIZE(interp_types));
-		param_updated = param_updated || ImGui::Combo("Fractal Type", &params.fractal_type, fractal_types, IM_ARRAYSIZE(fractal_types));
-		param_updated = param_updated || ImGui::SliderInt("seed", &params.seed, -10000, +10000);
-		param_updated = param_updated || ImGui::SliderInt("octaves", &params.octaves, 0, 10);
-		param_updated = param_updated || ImGui::InputFloat("frequency", &params.frequency);
-		param_updated = param_updated || ImGui::SliderFloat("gain", &params.gain, 0, 1);
-		param_updated = param_updated || ImGui::SliderFloat("lacunarity", &params.lacunarity, 1, 2);
+		param_updated = ImGui::Combo("Noise Type", &params.noise_type, noise_types, IM_ARRAYSIZE(noise_types)) || param_updated;
+		param_updated = ImGui::Combo("Interp Type", &params.interp_type, interp_types, IM_ARRAYSIZE(interp_types)) || param_updated;
+		param_updated = ImGui::Combo("Fractal Type", &params.fractal_type, fractal_types, IM_ARRAYSIZE(fractal_types)) || param_updated;
+		param_updated = ImGui::SliderInt("seed", &params.seed, -10000, +10000) || param_updated;
+		param_updated = ImGui::SliderInt("octaves", &params.octaves, 0, 10) || param_updated;
+		param_updated = ImGui::InputFloat("frequency", &params.frequency) || param_updated;
+		param_updated = ImGui::SliderFloat("gain", &params.gain, 0, 1) || param_updated;
+		param_updated = ImGui::SliderFloat("lacunarity", &params.lacunarity, 1, 2) || param_updated;
 
 		return param_updated;
 	}
