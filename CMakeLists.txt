@@ -36,6 +36,7 @@ set(HEADERS
 # Map Generator
 add_executable(${PROJECT_NAME}
     src/main.cpp
+    src/parameters/parameter_loader.cpp
 
     ${HEADERS}
 )
