@@ -10,28 +10,12 @@ class MapGenerator
 public:
 	using Ptr = std::unique_ptr<MapGenerator>;
 
+	virtual void generate() = 0;
+	virtual void loadParams() = 0;
 
-	virtual void generate()
-	{
+	virtual std::string getName() const = 0;
+	virtual std::vector<std::string> getLayerNames() const = 0;
 
-	}
-
-	virtual void loadParams()
-	{
-
-	}
-
-	virtual std::string getName() const
-	{
-		return std::string("map");
-	}
-
-	virtual std::vector<std::string> getLayerNames() const
-	{
-		return { "Elevation", "Moisture", "Temperature" };
-	}
-
-private:
 };
 
 #endif  // GENERATOR_MAP_GENERATOR_H

@@ -35,6 +35,10 @@ set(HEADERS
     include/generator/map_generator_manager.h
 
     include/imgui_extension/imgui_extension.h
+
+    include/factory/fastnoise_factory.h
+
+    include/fastnoise_generator.h
 )
 
 # Map Generator

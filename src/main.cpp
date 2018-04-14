@@ -11,6 +11,8 @@
 #include "generator/map_generator.h"
 #include "generator/map_generator_manager.h"
 
+#include "fastnoise_generator.h"
+
 #include <iostream>
 
 
@@ -24,14 +26,14 @@ int main(int argc, char *argv[])
 
 	const std::string param_file(argv[1]);
 	ParameterLoader loader(param_file);
+	auto parameters = loader.getParams();
 
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
 
 	std::vector<MapGenerator::Ptr> generators;
-	generators.push_back(std::make_unique<MapGenerator>());
-	generators.push_back(std::make_unique<MapGenerator>());
+	generators.push_back(std::make_unique<FastNoiseGenerator>(parameters["Map 1"]));
 
 
 	MapGeneratorManager generator_manager(generators);
