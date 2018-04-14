@@ -20,6 +20,7 @@ public:
 		selected_generator_(0)
 	{
 		generator_names_ = manager.getGeneratorNames();
+		layer_names_ = manager.getCurrentLayerNames();
 
 
 		// DEBUG: Generate a texture
@@ -39,8 +40,6 @@ public:
 
 	virtual bool update() override
 	{
-		//auto flags = ImGuiWindowFlags_MenuBar;
-
 		if (ImGui::Begin("Map"))
 		{
 			drawMapSelection();
@@ -61,11 +60,24 @@ private:
 	void drawMapSelection()
 	{
 		static int current_generator = 0;
+		static int current_layer = 0;
+
 		bool generator_changed = ImGui::Combo("Generators", &current_generator, generator_names_, generator_names_.size());
 
 		if (generator_changed)
 		{
+			// if the generator has been updated, select the generator in the manager
 			manager_.setCurrentGenerator(current_generator);
+			layer_names_ = manager_.getCurrentLayerNames();
+
+			current_layer = 0;
+		}
+
+		bool layer_changed = ImGui::Combo("Layers", &current_layer, layer_names_, layer_names_.size());
+
+		if (layer_changed)
+		{
+			manager_.setCurrentLayer(current_layer);
 		}
 	}
 

@@ -12,19 +12,26 @@ public:
 	using GeneratorList = std::vector<MapGenerator::Ptr>;
 
 	MapGeneratorManager(GeneratorList& list) :
-		generators_(list)
+		generators_(list),
+		current_map_generator_(0),
+		current_layer(0)
 	{
 
+	}
+
+	const MapGenerator::Ptr& getCurrentMapGenerator() const
+	{
+		return generators_[current_map_generator_];
 	}
 
 	void setCurrentGenerator(int select)
 	{
-
+		current_map_generator_ = select;
 	}
 
-	void selectCurrentLayer(int select)
+	void setCurrentLayer(int select)
 	{
-
+		current_layer = select;
 	}
 
 	std::vector<std::string> getGeneratorNames() const
@@ -38,8 +45,15 @@ public:
 		return names;
 	}
 
+	std::vector<std::string> getCurrentLayerNames() const
+	{
+		return generators_[current_map_generator_]->getLayerNames();
+	}
+
 private:
 	GeneratorList& generators_;
+	int current_map_generator_;
+	int current_layer;
 };
 
 #endif // GENERATOR_MAP_GENERATOR_MANAGER_H

@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 class MapGenerator
 {
@@ -23,6 +24,11 @@ public:
 	virtual std::string getName() const
 	{
 		return std::string("map");
+	}
+
+	virtual std::vector<std::string> getLayerNames() const
+	{
+		return { "Elevation", "Moisture", "Temperature" };
 	}
 
 private:
