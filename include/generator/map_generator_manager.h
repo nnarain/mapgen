@@ -12,10 +12,12 @@ public:
 	using GeneratorList = std::vector<MapGenerator::Ptr>;
 	using LayerList = std::vector<GeneratorBuffer>;
 
-	MapGeneratorManager(GeneratorList& list) :
+	MapGeneratorManager(GeneratorList& list, int buffer_size) :
 		generators_(list),
 		current_map_generator_(0),
-		current_layer(0)
+		current_layer(0),
+		buffer_width_(buffer_size),
+		buffer_height_(buffer_size)
 	{
 		setCurrentGenerator(current_map_generator_);
 	}
@@ -53,7 +55,7 @@ public:
 		layers_.clear();
 		for (auto i = 0u; i < num_layers; ++i)
 		{
-			layers_.push_back(GeneratorBuffer(512, 512));
+			layers_.push_back(GeneratorBuffer(buffer_width_, buffer_height_));
 		}
 	}
 
@@ -83,6 +85,8 @@ private:
 	LayerList layers_;
 	int current_map_generator_;
 	int current_layer;
+	int buffer_width_;
+	int buffer_height_;
 };
 
 #endif // GENERATOR_MAP_GENERATOR_MANAGER_H

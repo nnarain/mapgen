@@ -15,26 +15,14 @@
 class MapDisplayWindow : Window
 {
 public:
-	MapDisplayWindow(MapGeneratorManager& manager) :
+	MapDisplayWindow(MapGeneratorManager& manager, int texture_size) :
 		manager_(manager),
 		selected_generator_(0)
 	{
 		generator_names_ = manager.getGeneratorNames();
 		layer_names_ = manager.getCurrentLayerNames();
 
-
-		// DEBUG: Generate a texture
-		sf::Image img;
-		img.create(512, 512);
-		for (int x = 0; x < 512; ++x)
-		{
-			for (int y = 0; y < 512; ++y)
-			{
-				img.setPixel(x, y, sf::Color(255, 0, 0, 255));
-			}
-		}
-		texture_.create(512, 512);
-		texture_.update(img);
+		texture_.create(texture_size, texture_size);
 		sprite_.setTexture(texture_);
 	}
 
