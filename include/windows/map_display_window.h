@@ -16,7 +16,7 @@ public:
 		sprite_.setTexture(texture_);
 	}
 
-	virtual void render(sf::Window& window) override
+	virtual bool update() override
 	{
 		if (ImGui::Begin("Map"))
 		{
@@ -24,6 +24,8 @@ public:
 
 			ImGui::End();
 		}
+
+		return false;
 	}
 
 private:

@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);
 
-	ParameterWindow config_window;
+	ParameterWindow parameter_window(loader.getParams());
 	MapDisplayWindow map_display_window(512, 512);
 
 	sf::Clock deltaClock;
@@ -51,12 +51,12 @@ int main(int argc, char *argv[])
 		ImGui::SFML::Update(window, deltaClock.restart());
 		
 		// draw gui
-		config_window.render(window, loader.getParams());
-		map_display_window.render(window);
+		bool updated = parameter_window.update();
+		map_display_window.update();
 
-		if (config_window.updated())
+		if (updated)
 		{
-			const auto& config = config_window.getConfiguration();
+			std::cout << "Parameters Updated\n";
 		}
 
 		// re-draw the screen
