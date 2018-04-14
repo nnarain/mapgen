@@ -2,6 +2,6 @@ FastNoise:
   noise:
     noise_type: simplex
     frequency: 0.025
-    octaves: 6
+    octaves: 4
     gain: 0.5
 

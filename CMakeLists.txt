@@ -33,6 +33,8 @@ set(HEADERS
     include/parameters/parameter_value.h
     include/generator/map_generator.h
     include/generator/map_generator_manager.h
+    include/generator/generator_buffer.h
+    include/generator/pixel.h
 
     include/imgui_extension/imgui_extension.h
 

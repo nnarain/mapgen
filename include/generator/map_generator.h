@@ -5,12 +5,15 @@
 #include <string>
 #include <vector>
 
+#include "generator/generator_buffer.h"
+
 class MapGenerator
 {
 public:
 	using Ptr = std::unique_ptr<MapGenerator>;
+	using GeneratorBufferList = std::vector<GeneratorBuffer>;
 
-	virtual void generate() = 0;
+	virtual void generate(GeneratorBufferList&) = 0;
 	virtual void loadParams() = 0;
 
 	virtual std::string getName() const = 0;

@@ -10,13 +10,33 @@ class MapGeneratorManager
 {
 public:
 	using GeneratorList = std::vector<MapGenerator::Ptr>;
+	using LayerList = std::vector<GeneratorBuffer>;
 
 	MapGeneratorManager(GeneratorList& list) :
 		generators_(list),
 		current_map_generator_(0),
 		current_layer(0)
 	{
+		setCurrentGenerator(current_map_generator_);
+	}
 
+	void generate()
+	{
+		// get the current generator
+		auto& generator = generators_[current_map_generator_];
+
+		if (generator)
+		{
+			// reload parameters
+			generator->loadParams();
+			// generate
+			generator->generate(layers_);
+		}
+	}
+
+	uint8_t* getBufferData()
+	{
+		return layers_[current_layer].get();
 	}
 
 	const MapGenerator::Ptr& getCurrentMapGenerator() const
@@ -27,6 +47,14 @@ public:
 	void setCurrentGenerator(int select)
 	{
 		current_map_generator_ = select;
+
+		// allocate layers
+		const auto num_layers = getCurrentLayerNames().size();
+		layers_.clear();
+		for (auto i = 0u; i < num_layers; ++i)
+		{
+			layers_.push_back(GeneratorBuffer(512, 512));
+		}
 	}
 
 	void setCurrentLayer(int select)
@@ -52,6 +80,7 @@ public:
 
 private:
 	GeneratorList& generators_;
+	LayerList layers_;
 	int current_map_generator_;
 	int current_layer;
 };
