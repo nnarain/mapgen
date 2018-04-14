@@ -15,6 +15,7 @@
 
 #include <iostream>
 
+static const int BUFFER_SIZE = 512;
 
 int main(int argc, char *argv[])
 {
@@ -33,11 +34,11 @@ int main(int argc, char *argv[])
 	std::vector<MapGenerator::Ptr> generators;
 	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator(parameters)));
 
-	MapGeneratorManager generator_manager(generators);
+	MapGeneratorManager generator_manager(generators, BUFFER_SIZE);
 
 	// Create ui components
 	ParameterWindow parameter_window(parameters);
-	MapDisplayWindow map_display_window(generator_manager);
+	MapDisplayWindow map_display_window(generator_manager, BUFFER_SIZE);
 
 	// Init SFML
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
