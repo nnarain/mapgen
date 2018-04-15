@@ -17,6 +17,9 @@ public:
 		noise.SetFractalOctaves(params.octaves);
 		noise.SetFractalGain(params.gain);
 		noise.SetFractalLacunarity(params.lacunarity);
+		noise.SetCellularDistanceFunction(static_cast<FastNoise::CellularDistanceFunction>(params.cellular_distance_function));
+		noise.SetCellularReturnType(static_cast<FastNoise::CellularReturnType>(params.cellular_return_type));
+		noise.SetCellularJitter(params.cellular_jitter);
 
 		return noise;
 	}
