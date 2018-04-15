@@ -14,6 +14,11 @@ struct NoiseParameters
 	float frequency;
 	float gain;
 	float lacunarity;
+
+	int cellular_distance_function;
+	int cellular_return_type;
+
+	float cellular_jitter;
 	
 
 	NoiseParameters() :
@@ -24,7 +29,10 @@ struct NoiseParameters
 		octaves(0), 
 		frequency(0.01f), 
 		gain(0),
-		lacunarity(2.0f)
+		lacunarity(2.0f),
+		cellular_distance_function(0),
+		cellular_return_type(0),
+		cellular_jitter(0.45)
 	{
 	}
 };

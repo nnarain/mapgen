@@ -26,6 +26,8 @@ private:
 	std::array<std::string, 10> noise_types_;
 	std::array<std::string, 3> interp_types_;
 	std::array<std::string, 3> fractal_types_;
+	std::array<std::string, 3> cellular_distance_function_;
+	std::array<std::string, 8> cellular_return_type_;
 
 	void load(YAML::Node& node);
 

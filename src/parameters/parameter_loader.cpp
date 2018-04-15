@@ -7,6 +7,8 @@ ParameterLoader::ParameterLoader(const std::string& file) :
 		"cellular", "whitenoise", "cubic", "cubic_fractal"}),
 	interp_types_({"linear", "hermite", "quintic"}),
 	fractal_types_({"fbm", "billow", "rigidmulti"}),
+	cellular_distance_function_({ "euclidean", "manhattan", "natural" }),
+	cellular_return_type_({ "cellvalue", "noiselookup", "distance", "distance2", "distance2add", "distance2sub", "distance2mul", "distance2div" }),
 	filename_(file)
 {
 	auto root = YAML::LoadFile(file);
@@ -70,6 +72,9 @@ void ParameterLoader::emitNoiseParameters(YAML::Emitter& out, NoiseParameters& p
 	out << YAML::Key << "octaves" << YAML::Value << params.octaves;
 	out << YAML::Key << "gain" << YAML::Value << params.gain;
 	out << YAML::Key << "lacunarity" << YAML::Value << params.lacunarity;
+	out << YAML::Key << "celluar_distance" << YAML::Value << cellular_distance_function_[params.cellular_distance_function];
+	out << YAML::Key << "cellular_return" << YAML::Value << cellular_return_type_[params.cellular_return_type];
+	out << YAML::Key << "cellular_jitter" << YAML::Value << params.cellular_jitter;
 	out << YAML::EndMap;
 }
 
@@ -145,11 +150,24 @@ NoiseParameters ParameterLoader::loadNoiseParameter(YAML::Node& node)
 		params.fractal_type = findIndex(fractal_types_, fractal_type);
 	}
 
+	if (node["cellular_distance"])
+	{
+		auto cellular_distane_function = node["cellular_distance"].as<std::string>();
+		params.cellular_distance_function = findIndex(cellular_distance_function_, cellular_distane_function);
+	}
+
+	if (node["cellular_return"])
+	{
+		auto cellular_return = node["cellular_return"].as<std::string>();
+		params.cellular_return_type = findIndex(cellular_return_type_, cellular_return);
+	}
+
 	quickLoad(node, "seed", params.seed);
 	quickLoad(node, "octaves", params.octaves);
 	quickLoad(node, "frequency", params.frequency);
 	quickLoad(node, "gain", params.gain);
 	quickLoad(node, "lacunarity", params.lacunarity);
+	quickLoad(node, "cellular_jitter", params.cellular_jitter);
 
 	return params;
 }

@@ -3,11 +3,14 @@ FastNoise:
     noise_type: cubic_fractal
     fractal_type: fbm
     interp_type: quintic
-    seed: -4444
-    frequency: 0.025
-    octaves: 5
-    gain: 0.756
-    lacunarity: 1.735
+    seed: -1709
+    frequency: 0.5
+    octaves: 4
+    gain: 0.581
+    lacunarity: 1.932
+    celluar_distance: euclidean
+    cellular_return: distance2add
+    cellular_jitter: 0.1
 Terrain:
   noise:
     noise_type: simplex_fractal
@@ -18,3 +21,6 @@ Terrain:
     octaves: 4
     gain: 0.504
     lacunarity: 1.675
+    celluar_distance: euclidean
+    cellular_return: cellvalue
+    cellular_jitter: 0.45

@@ -83,16 +83,44 @@ private:
 		static const char* fractal_types[] = {
 			"FBM", "Billow", "RigidMulti"
 		};
+		static const char* cellular_distance_function[] = {
+			"Euclidean", "Manhattan", "Natural"
+		};
+		static const char* cellular_return_type[] = {
+			"CellValue", "NoiseLookup", "Distance", "Distance2",
+			"Distance2Add", "Distance2Sub", "Distance2Mul", "Distance2Div" 
+		};
 
 		bool param_updated = false;
 		param_updated = ImGui::Combo("Noise Type", &params.noise_type, noise_types, IM_ARRAYSIZE(noise_types)) || param_updated;
-		param_updated = ImGui::Combo("Interp Type", &params.interp_type, interp_types, IM_ARRAYSIZE(interp_types)) || param_updated;
-		param_updated = ImGui::Combo("Fractal Type", &params.fractal_type, fractal_types, IM_ARRAYSIZE(fractal_types)) || param_updated;
 		param_updated = ImGui::SliderInt("seed", &params.seed, -10000, +10000) || param_updated;
-		param_updated = ImGui::SliderInt("octaves", &params.octaves, 0, 10) || param_updated;
 		param_updated = ImGui::InputFloat("frequency", &params.frequency) || param_updated;
-		param_updated = ImGui::SliderFloat("gain", &params.gain, 0, 1) || param_updated;
-		param_updated = ImGui::SliderFloat("lacunarity", &params.lacunarity, 1, 2) || param_updated;
+
+		auto type = params.noise_type;
+
+		// Interp type is only for value and perlin noise
+		if (type <= 3)
+		{
+			param_updated = ImGui::Combo("Interp Type", &params.interp_type, interp_types, IM_ARRAYSIZE(interp_types)) || param_updated;
+		}
+
+		// fractal type is only for fractal noise
+		if (type == 1 || type == 3 || type == 5 || type == 9)
+		{
+			param_updated = ImGui::Combo("Fractal Type", &params.fractal_type, fractal_types, IM_ARRAYSIZE(fractal_types)) || param_updated;
+			param_updated = ImGui::SliderInt("octaves", &params.octaves, 0, 10) || param_updated;
+			param_updated = ImGui::SliderFloat("gain", &params.gain, 0, 1) || param_updated;
+			param_updated = ImGui::SliderFloat("lacunarity", &params.lacunarity, 1, 2) || param_updated;
+		}
+
+		if (type == 6)
+		{
+			param_updated = ImGui::Combo("Distance Func",
+				&params.cellular_distance_function, cellular_distance_function, IM_ARRAYSIZE(cellular_distance_function)) || param_updated;
+			param_updated = ImGui::Combo("Return Type",
+				&params.cellular_return_type, cellular_return_type, IM_ARRAYSIZE(cellular_return_type)) || param_updated;
+			param_updated = ImGui::InputFloat("jitter", &params.cellular_jitter) || param_updated;
+		}
 
 		return param_updated;
 	}
