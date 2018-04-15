@@ -18,45 +18,37 @@ class ParameterWindow : Window
 	using ParameterMap = std::map<std::string, ParameterLoader::GeneratorParameters>;
 public:
 	ParameterWindow(ParameterMap& param_map) :
-		parameter_map(param_map),
+		parameter_map_(param_map),
 		opened_(false)
 	{
 
 	}
 
-	virtual bool update() override
+	virtual bool update(std::string& current_map)
 	{
 		bool param_updated = false;
 
 		if (ImGui::Begin("Parameters", &opened_))
 		{
-			for (auto& it : parameter_map)
+			ImGui::Text(current_map.c_str());
+
+			for (auto& it : parameter_map_[current_map])
 			{
-				auto& name = it.first;
-				auto& params = it.second;
+				auto& field_name = it.first;
+				auto& param_value = it.second;
 
-				ImGui::Text(name.c_str());
-
-				for (auto& it : params)
+				if (param_value.type == ParameterValue::Type::Scalar)
 				{
-					auto& field_name = it.first;
-					auto& param_value = it.second;
-
-					if (param_value.type == ParameterValue::Type::Scalar)
+					param_updated = ImGui::InputFloat(field_name.c_str(), &param_value.param.value) || param_updated;
+				}
+				else if (param_value.type == ParameterValue::Type::Noise)
+				{
+					if (ImGui::TreeNode(&field_name, field_name.c_str()))
 					{
-						param_updated = ImGui::InputFloat(field_name.c_str(), &param_value.param.value) || param_updated;
-					}
-					else if (param_value.type == ParameterValue::Type::Noise)
-					{
-						if (ImGui::TreeNode(&field_name, field_name.c_str()))
-						{
-							param_updated = renderNoiseParams(param_value.param.noise) || param_updated;
-							ImGui::TreePop();
-						}
+						param_updated = renderNoiseParams(param_value.param.noise) || param_updated;
+						ImGui::TreePop();
 					}
 				}
-
-				ImGui::Separator();
 			}
 
 			if (ImGui::Button("Save"))
@@ -105,7 +97,7 @@ private:
 		return param_updated;
 	}
 
-	ParameterMap& parameter_map;
+	ParameterMap& parameter_map_;
 	bool opened_;
 	std::function<void()> save_callback_;
 };

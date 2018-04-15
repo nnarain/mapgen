@@ -17,7 +17,8 @@ public:
 		current_map_generator_(0),
 		current_layer(0),
 		buffer_width_(buffer_size),
-		buffer_height_(buffer_size)
+		buffer_height_(buffer_size),
+		update_ready_(false)
 	{
 		setCurrentGenerator(current_map_generator_);
 	}
@@ -34,11 +35,19 @@ public:
 			// generate
 			generator->generate(layers_);
 		}
+
+		update_ready_ = true;
 	}
 
 	uint8_t* getBufferData()
 	{
+		update_ready_ = false;
 		return layers_[current_layer].get();
+	}
+
+	bool isUpdateReady() const
+	{
+		return update_ready_;
 	}
 
 	const MapGenerator::Ptr& getCurrentMapGenerator() const
@@ -87,6 +96,8 @@ private:
 	int current_layer;
 	int buffer_width_;
 	int buffer_height_;
+
+	bool update_ready_;
 };
 
 #endif // GENERATOR_MAP_GENERATOR_MANAGER_H
