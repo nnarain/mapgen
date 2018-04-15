@@ -1,11 +1,20 @@
 FastNoise:
   noise:
-    noise_type: value_fractal
+    noise_type: cubic_fractal
     fractal_type: fbm
-    interp_type: hermite
-    seed: 0
+    interp_type: quintic
+    seed: -4444
     frequency: 0.025
+    octaves: 5
+    gain: 0.756
+    lacunarity: 1.735
+Terrain:
+  noise:
+    noise_type: simplex_fractal
+    fractal_type: fbm
+    interp_type: quintic
+    seed: 0
+    frequency: 0.01
     octaves: 4
-    gain: 0.5
-    lacunarity: 2
-  test: 0.24
+    gain: 0.504
+    lacunarity: 1.675

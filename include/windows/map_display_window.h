@@ -59,6 +59,9 @@ private:
 			layer_names_ = manager_.getCurrentLayerNames();
 
 			current_layer = 0;
+
+			// generate the new map
+			manager_.generate();
 		}
 
 		bool layer_changed = ImGui::Combo("Layers", &current_layer, layer_names_, layer_names_.size());

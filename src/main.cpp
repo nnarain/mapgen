@@ -12,6 +12,7 @@
 #include "generator/map_generator_manager.h"
 
 #include "fastnoise_generator.h"
+#include "terrain_generator.h"
 
 #include <iostream>
 
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
 	// Create generators
 	std::vector<MapGenerator::Ptr> generators;
 	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator(parameters)));
+	generators.push_back(MapGenerator::Ptr(new TerrainGenerator(parameters)));
 
 	MapGeneratorManager generator_manager(generators, BUFFER_SIZE);
 
@@ -71,17 +73,20 @@ int main(int argc, char *argv[])
 		ImGui::SFML::Update(window, deltaClock.restart());
 		
 		// draw gui
-		bool updated = parameter_window.update();
+		bool params_updated = parameter_window.update(generator_manager.getCurrentMapGenerator()->getName());
 
-		if (updated || first_pass)
+		if (params_updated || first_pass)
 		{
 			generator_manager.generate();
-			map_display_window.updateTexture(static_cast<sf::Uint8*>(generator_manager.getBufferData()));
-
 			first_pass = false;
 		}
 
 		map_display_window.update();
+
+		if (generator_manager.isUpdateReady())
+		{
+			map_display_window.updateTexture(static_cast<sf::Uint8*>(generator_manager.getBufferData()));
+		}
 
 		//ImGui::ShowDemoWindow();
 
