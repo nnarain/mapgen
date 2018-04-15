@@ -13,14 +13,14 @@ FastNoise:
     cellular_jitter: 0.1
 Terrain:
   elevation:
-    noise_type: simplex_fractal
+    noise_type: cubic_fractal
     fractal_type: fbm
     interp_type: quintic
     seed: -855
     frequency: 0.01
-    octaves: 4
-    gain: 0.504
-    lacunarity: 1.675
+    octaves: 5
+    gain: 0.513
+    lacunarity: 1.906
     celluar_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45

@@ -37,6 +37,7 @@ set(HEADERS
     include/generator/pixel.h
 
     include/imgui_extension/imgui_extension.h
+    include/utils/utils.h
 
     include/factory/fastnoise_factory.h
 

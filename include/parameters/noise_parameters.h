@@ -1,8 +1,6 @@
 #ifndef PARAMETERS_NOISE_PARAMETERS_H
 #define PARAMETERS_NOISE_PARAMETERS_H
 
-#include <FastNoise.h>
-
 struct NoiseParameters
 {
 	int noise_type;

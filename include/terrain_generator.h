@@ -4,6 +4,7 @@
 #include "generator/map_generator.h"
 #include "parameters/parameter_loader.h"
 #include "factory/fastnoise_factory.h"
+#include "utils/utils.h"
 
 #include <FastNoise.h>
 
@@ -29,16 +30,14 @@ public:
 			for (int y = 0; y < height; ++y)
 			{
 				auto elevation = elevation_.GetNoise((float)x, (float)y);
-				auto moisture = moisture_.GetNoise((float)x, (float)y);
-				auto temperature = temperature_.GetNoise((float)x, (float)y);
+				
+				auto land_mask = (elevation > 0);
 
 				Pixel pe = Pixel::from(elevation);
-				Pixel pm = Pixel::from(moisture);
-				Pixel pt = Pixel::from(temperature);
+				Pixel pl = (land_mask) ? Pixel(183, 110, 0) : Pixel(41, 85, 244);
 
 				buffers[0].write(x, y, pe);
-				buffers[1].write(x, y, pm);
-				buffers[2].write(x, y, pt);
+				buffers[1].write(x, y, pl);
 			}
 		}
 	}
@@ -57,7 +56,7 @@ public:
 
 	virtual std::vector<std::string> getLayerNames() const
 	{
-		return { "Elevation", "Moisture", "Temperature" };
+		return { "Elevation", "Land Mask" };
 	}
 private:
 	FastNoise elevation_;
