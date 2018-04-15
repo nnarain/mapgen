@@ -24,12 +24,9 @@ public:
 		{
 			for (int y = 0; y < height; ++y)
 			{
-				auto sample = noise_.GetNoise(x, y);
+				auto sample = noise_.GetNoise((float)x, (float)y);
 			
-				Pixel p;
-				p.r = sample * 255.0f;
-				p.g = sample * 255.0f;
-				p.b = sample * 255.0f;
+				Pixel p = Pixel::from(sample);
 
 				buffers[0].write(x, y, p);
 			}

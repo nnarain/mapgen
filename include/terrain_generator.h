@@ -28,21 +28,26 @@ public:
 		{
 			for (int y = 0; y < height; ++y)
 			{
-				auto sample = noise_.GetNoise(x, y);
+				auto elevation = elevation_.GetNoise((float)x, (float)y);
+				auto moisture = moisture_.GetNoise((float)x, (float)y);
+				auto temperature = temperature_.GetNoise((float)x, (float)y);
 
-				Pixel p;
-				p.r = (uint8_t)(sample * 255.0f);
-				p.g = (uint8_t)(sample * 255.0f);
-				p.b = (uint8_t)(sample * 255.0f);
+				Pixel pe = Pixel::from(elevation);
+				Pixel pm = Pixel::from(moisture);
+				Pixel pt = Pixel::from(temperature);
 
-				buffers[0].write(x, y, p);
+				buffers[0].write(x, y, pe);
+				buffers[1].write(x, y, pm);
+				buffers[2].write(x, y, pt);
 			}
 		}
 	}
 
 	virtual void loadParams(ParameterLoader::GeneratorParameters& params) override
 	{
-		noise_ = FastNoiseFactory::create(params["noise"].param.noise);
+		elevation_ = FastNoiseFactory::create(params["elevation"].param.noise);
+		moisture_ = FastNoiseFactory::create(params["moisture"].param.noise);
+		temperature_ = FastNoiseFactory::create(params["temperature"].param.noise);
 	}
 
 	virtual std::string getName() const
@@ -52,10 +57,12 @@ public:
 
 	virtual std::vector<std::string> getLayerNames() const
 	{
-		return { "Height" };
+		return { "Elevation", "Moisture", "Temperature" };
 	}
 private:
-	FastNoise noise_;
+	FastNoise elevation_;
+	FastNoise moisture_;
+	FastNoise temperature_;
 };
 
 #endif // TERRAIN_GENERATOR_H

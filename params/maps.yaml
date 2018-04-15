@@ -3,24 +3,48 @@ FastNoise:
     noise_type: cubic_fractal
     fractal_type: fbm
     interp_type: quintic
-    seed: -1709
-    frequency: 0.01
-    octaves: 4
-    gain: 0.581
-    lacunarity: 1.932
+    seed: -1026
+    frequency: 0.02
+    octaves: 5
+    gain: 0.577
+    lacunarity: 1.833
     celluar_distance: euclidean
     cellular_return: distance2add
     cellular_jitter: 0.1
 Terrain:
-  noise:
+  elevation:
     noise_type: simplex_fractal
     fractal_type: fbm
     interp_type: quintic
-    seed: 0
+    seed: -855
     frequency: 0.01
     octaves: 4
     gain: 0.504
     lacunarity: 1.675
+    celluar_distance: euclidean
+    cellular_return: cellvalue
+    cellular_jitter: 0.45
+  moisture:
+    noise_type: simplex_fractal
+    fractal_type: fbm
+    interp_type: quintic
+    seed: 1966
+    frequency: 0.01
+    octaves: 3
+    gain: 0.504
+    lacunarity: 2
+    celluar_distance: euclidean
+    cellular_return: cellvalue
+    cellular_jitter: 0.45
+  temperature:
+    noise_type: simplex_fractal
+    fractal_type: fbm
+    interp_type: quintic
+    seed: 1880
+    frequency: 0.01
+    octaves: 3
+    gain: 0.5560001
+    lacunarity: 2
     celluar_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45

@@ -52,6 +52,11 @@ public:
 		return update_ready_;
 	}
 
+	void setUpdateReady(bool ready)
+	{
+		update_ready_ = ready;
+	}
+
 	const MapGenerator::Ptr& getCurrentMapGenerator() const
 	{
 		return generators_[current_map_generator_];
