@@ -12,8 +12,10 @@ public:
 	using GeneratorList = std::vector<MapGenerator::Ptr>;
 	using LayerList = std::vector<GeneratorBuffer>;
 
-	MapGeneratorManager(GeneratorList& list, int buffer_size) :
+	MapGeneratorManager(GeneratorList& list, ParameterLoader::ParameterMap& parameter_map, int buffer_size) :
 		generators_(list),
+		layers_(),
+		parameter_map_(parameter_map),
 		current_map_generator_(0),
 		current_layer(0),
 		buffer_width_(buffer_size),
@@ -31,7 +33,7 @@ public:
 		if (generator)
 		{
 			// reload parameters
-			generator->loadParams();
+			generator->loadParams(parameter_map_[generator->getName()]);
 			// generate
 			generator->generate(layers_);
 		}
@@ -92,6 +94,7 @@ public:
 private:
 	GeneratorList& generators_;
 	LayerList layers_;
+	ParameterLoader::ParameterMap& parameter_map_;
 	int current_map_generator_;
 	int current_layer;
 	int buffer_width_;

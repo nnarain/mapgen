@@ -4,7 +4,7 @@ FastNoise:
     fractal_type: fbm
     interp_type: quintic
     seed: -1709
-    frequency: 0.5
+    frequency: 0.01
     octaves: 4
     gain: 0.581
     lacunarity: 1.932

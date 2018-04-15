@@ -14,8 +14,7 @@
 class TerrainGenerator : public MapGenerator
 {
 public:
-	TerrainGenerator(std::map<std::string, ParameterLoader::GeneratorParameters>& params) :
-		params_(params[getName()])
+	TerrainGenerator()
 	{
 
 	}
@@ -41,9 +40,9 @@ public:
 		}
 	}
 
-	virtual void loadParams()
+	virtual void loadParams(ParameterLoader::GeneratorParameters& params) override
 	{
-		noise_ = FastNoiseFactory::create(params_["noise"].param.noise);
+		noise_ = FastNoiseFactory::create(params["noise"].param.noise);
 	}
 
 	virtual std::string getName() const
@@ -56,7 +55,6 @@ public:
 		return { "Height" };
 	}
 private:
-	ParameterLoader::GeneratorParameters& params_;
 	FastNoise noise_;
 };
 

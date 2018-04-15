@@ -14,6 +14,7 @@ public:
 		noise.SetFractalType(static_cast<FastNoise::FractalType>(params.fractal_type));
 		noise.SetInterp(static_cast<FastNoise::Interp>(params.interp_type));
 		noise.SetSeed(params.seed);
+		noise.SetFrequency(params.frequency);
 		noise.SetFractalOctaves(params.octaves);
 		noise.SetFractalGain(params.gain);
 		noise.SetFractalLacunarity(params.lacunarity);
