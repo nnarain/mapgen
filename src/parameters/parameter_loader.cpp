@@ -1,6 +1,13 @@
 #include "parameters/parameter_loader.h"
 
-ParameterLoader::ParameterLoader(const std::string& file)
+#include <fstream>
+
+ParameterLoader::ParameterLoader(const std::string& file) : 
+	noise_types_({"value", "value_fractal", "perlin", "perlin_fractal", "simplex", "simplex_fractal",
+		"cellular", "whitenoise", "cubic", "cubic_fractal"}),
+	interp_types_({"linear", "hermite", "quintic"}),
+	fractal_types_({"fbm", "billow", "rigidmulti"}),
+	filename_(file)
 {
 	auto root = YAML::LoadFile(file);
 	load(root);
@@ -8,8 +15,64 @@ ParameterLoader::ParameterLoader(const std::string& file)
 
 std::map<std::string, ParameterLoader::GeneratorParameters>& ParameterLoader::getParams()
 {
-	return generator_params;
+	return generator_params_;
 }
+
+void ParameterLoader::save()
+{
+	YAML::Emitter out;
+
+	out << YAML::BeginMap;
+	for (auto& it : generator_params_)
+	{
+		out << YAML::Key << it.first;
+		out << YAML::Value;
+		emitGeneratorParams(out, it.second);
+	}
+	out << YAML::EndMap;
+
+	std::ofstream file(filename_);
+	file << out.c_str();
+}
+
+void ParameterLoader::emitGeneratorParams(YAML::Emitter& out, GeneratorParameters& params)
+{
+	out << YAML::BeginMap;
+	
+	for (auto& it : params)
+	{
+		out << YAML::Key << it.first;
+
+		auto param = it.second;
+
+		if (param.type == ParameterValue::Type::Scalar)
+		{
+			out << YAML::Value << param.param.value;
+		}
+		else if (param.type == ParameterValue::Type::Noise)
+		{
+			out << YAML::Value;
+			emitNoiseParameters(out, param.param.noise);
+		}
+	}
+
+	out << YAML::EndMap;
+}
+
+void ParameterLoader::emitNoiseParameters(YAML::Emitter& out, NoiseParameters& params)
+{
+	out << YAML::BeginMap;
+	out << YAML::Key << "noise_type" << YAML::Value << noise_types_[params.noise_type];
+	out << YAML::Key << "fractal_type" << YAML::Value << fractal_types_[params.fractal_type];
+	out << YAML::Key << "interp_type" << YAML::Value << interp_types_[params.interp_type];
+	out << YAML::Key << "seed" << YAML::Value << params.seed;
+	out << YAML::Key << "frequency" << YAML::Value << params.frequency;
+	out << YAML::Key << "octaves" << YAML::Value << params.octaves;
+	out << YAML::Key << "gain" << YAML::Value << params.gain;
+	out << YAML::Key << "lacunarity" << YAML::Value << params.lacunarity;
+	out << YAML::EndMap;
+}
+
 
 void ParameterLoader::load(YAML::Node& node)
 {
@@ -18,7 +81,7 @@ void ParameterLoader::load(YAML::Node& node)
 		auto key = it->first.as<std::string>();
 		auto params = loadGeneratorParams(it->second);
 
-		generator_params[key] = params;
+		generator_params_[key] = params;
 	}
 }
 
@@ -62,35 +125,24 @@ ParameterLoader::GeneratorParameters ParameterLoader::loadGeneratorParams(YAML::
 
 NoiseParameters ParameterLoader::loadNoiseParameter(YAML::Node& node)
 {
-	static std::array<std::string, 10> noise_types = {
-		"value", "value_fractal", "perlin", "perlin_fractal", "simplex", "simplex_fractal",
-		"cellular", "whitenoise", "cubic", "cubic_fractal"
-	};
-	static std::array<std::string, 3> interp_types = {
-		"linear", "hermite", "quintic"
-	};
-	static std::array<std::string, 3> fractal_types = {
-		"fbm", "billow", "rigidmulti"
-	};
-
 	NoiseParameters params;
 
 	// find the noise type
 	auto noise_type = node["noise_type"].as<std::string>();
-	params.noise_type = findIndex(noise_types, noise_type);
+	params.noise_type = findIndex(noise_types_, noise_type);
 
 	// find interp type
 	if (node["interp_type"])
 	{
 		auto interp_type = node["interp_type"].as<std::string>();
-		params.interp_type = findIndex(interp_types, interp_type);
+		params.interp_type = findIndex(interp_types_, interp_type);
 	}
 
 	// find fractal type
 	if (node["fractal_type"])
 	{
 		auto fractal_type = node["fractal_type"].as<std::string>();
-		params.fractal_type = findIndex(fractal_types, fractal_type);
+		params.fractal_type = findIndex(fractal_types_, fractal_type);
 	}
 
 	quickLoad(node, "seed", params.seed);

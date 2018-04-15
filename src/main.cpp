@@ -38,6 +38,10 @@ int main(int argc, char *argv[])
 
 	// Create ui components
 	ParameterWindow parameter_window(parameters);
+	parameter_window.setSaveCallback([&] {
+		loader.save();
+	});
+
 	MapDisplayWindow map_display_window(generator_manager, BUFFER_SIZE);
 
 	// Init SFML

@@ -8,8 +8,10 @@
 
 #include <imgui.h>
 
+#include <functional>
 #include <string>
 #include <map>
+
 
 class ParameterWindow : Window
 {
@@ -59,13 +61,21 @@ public:
 
 			if (ImGui::Button("Save"))
 			{
-				// ...
+				if (save_callback_)
+				{
+					save_callback_();
+				}
 			}
 
 			ImGui::End();
 		}
 
 		return param_updated;
+	}
+
+	void setSaveCallback(std::function<void()> fn)
+	{
+		save_callback_ = fn;
 	}
 
 private:
@@ -97,6 +107,7 @@ private:
 
 	ParameterMap& parameter_map;
 	bool opened_;
+	std::function<void()> save_callback_;
 };
 
 #endif  // WINDOWS_CONFIG_WINDOW_H

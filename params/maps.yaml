@@ -1,7 +1,11 @@
 FastNoise:
   noise:
-    noise_type: simplex
+    noise_type: value_fractal
+    fractal_type: fbm
+    interp_type: hermite
+    seed: 0
     frequency: 0.025
     octaves: 4
     gain: 0.5
-
+    lacunarity: 2
+  test: 0.24

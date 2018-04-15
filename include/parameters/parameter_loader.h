@@ -18,10 +18,19 @@ public:
 
 	ParameterLoader(const std::string& file);
 
+	void save();
+
 	std::map<std::string, GeneratorParameters>& getParams();
 
 private:
+	std::array<std::string, 10> noise_types_;
+	std::array<std::string, 3> interp_types_;
+	std::array<std::string, 3> fractal_types_;
+
 	void load(YAML::Node& node);
+
+	void emitGeneratorParams(YAML::Emitter& out, GeneratorParameters& params);
+	void emitNoiseParameters(YAML::Emitter& out, NoiseParameters& params);
 
 	GeneratorParameters loadGeneratorParams(YAML::Node& node);
 	NoiseParameters loadNoiseParameter(YAML::Node& node);
@@ -44,7 +53,8 @@ private:
 		}
 	}
 
-	std::map<std::string, GeneratorParameters> generator_params;
+	std::map<std::string, GeneratorParameters> generator_params_;
+	std::string filename_;
 };
 
 #endif  // PARAMETERS_PARAMETER_LOADER_H
