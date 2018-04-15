@@ -44,9 +44,7 @@ public:
 
 	virtual void loadParams(ParameterLoader::GeneratorParameters& params) override
 	{
-		elevation_ = FastNoiseFactory::create(params["elevation"].param.noise);
-		moisture_ = FastNoiseFactory::create(params["moisture"].param.noise);
-		temperature_ = FastNoiseFactory::create(params["temperature"].param.noise);
+		elevation_ = FastNoiseFactory::create(getNoise(params, "elevation"));
 	}
 
 	virtual std::string getName() const

@@ -35,7 +35,7 @@ public:
 
 	virtual void loadParams(ParameterLoader::GeneratorParameters& params) override
 	{
-		noise_ = FastNoiseFactory::create(params["noise"].param.noise);
+		noise_ = FastNoiseFactory::create(getNoise(params, "noise"));
 	}
 
 	virtual std::string getName() const override

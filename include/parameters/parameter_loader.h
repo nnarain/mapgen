@@ -9,12 +9,14 @@
 #include <array>
 #include <map>
 #include <string>
+#include <vector>
+#include <utility>
 #include <iostream>
 
 class ParameterLoader
 {
 public:
-	using GeneratorParameters = std::map<std::string, ParameterValue>;
+	using GeneratorParameters = std::vector<std::pair<std::string, ParameterValue>>;
 	using ParameterMap = std::map<std::string, GeneratorParameters>;
 
 	ParameterLoader(const std::string& file);

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 ParameterLoader::ParameterLoader(const std::string& file) :
 	noise_types_({ "value", "value_fractal", "perlin", "perlin_fractal", "simplex", "simplex_fractal",
@@ -125,7 +126,7 @@ ParameterLoader::GeneratorParameters ParameterLoader::loadGeneratorParams(YAML::
 			value.type = ParameterValue::Type::Scalar;
 			value.param.value = node.as<float>();
 
-			params[key] = value;
+			//params[key] = value;
 		}
 		else if (node.Type() == YAML::NodeType::Map)
 		{
@@ -137,16 +138,22 @@ ParameterLoader::GeneratorParameters ParameterLoader::loadGeneratorParams(YAML::
 				value.type = ParameterValue::Type::Noise;
 				value.param.noise = noise_params;
 
-				params[key] = value;
+				//params[key] = value;
 			}
 			// if it contains a color field it is a color parameter
 			else if (node["color"])
 			{
 				value.type = ParameterValue::Type::Color;
 				loadColorParameter(node["color"], &value.param.color[0]);
-				params[key] = value;
+				//params[key] = value;
+			}
+			else 
+			{
+				throw std::runtime_error("Invalid parameter specified");
 			}
 		}
+
+		params.emplace_back(key, value);
 	}
 
 	return params;
