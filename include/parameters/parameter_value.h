@@ -4,19 +4,22 @@
 #include "parameters/noise_parameters.h"
 
 #include <string>
+#include <cstdint>
 
 struct ParameterValue
 {
 	enum class Type
 	{
 		Scalar,
-		Noise
+		Noise,
+		Color
 	};
 
 	union Parameter
 	{
 		float value;
 		NoiseParameters noise;
+		float color[4];
 	};
 
 	Type type;

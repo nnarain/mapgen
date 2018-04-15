@@ -1,4 +1,6 @@
 FastNoise:
+  mycolor:
+    color: 0ff43ff
   noise:
     noise_type: cubic_fractal
     fractal_type: fbm

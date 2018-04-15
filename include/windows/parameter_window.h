@@ -32,6 +32,7 @@ public:
 		{
 			ImGui::Text(current_map.c_str());
 
+			// iterate and display parameters
 			for (auto& it : parameter_map_[current_map])
 			{
 				auto& field_name = it.first;
@@ -39,15 +40,24 @@ public:
 
 				if (param_value.type == ParameterValue::Type::Scalar)
 				{
+					// display scalar values as floats
 					param_updated = ImGui::InputFloat(field_name.c_str(), &param_value.param.value) || param_updated;
 				}
 				else if (param_value.type == ParameterValue::Type::Noise)
 				{
+					// nest noise params in a tree node
 					if (ImGui::TreeNode(&field_name, field_name.c_str()))
 					{
 						param_updated = renderNoiseParams(param_value.param.noise) || param_updated;
 						ImGui::TreePop();
 					}
+				}
+				else if (param_value.type == ParameterValue::Type::Color)
+				{
+					param_updated = ImGui::ColorEdit4(
+						field_name.c_str(),
+						&param_value.param.color[0],
+						ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs) || param_updated;
 				}
 			}
 
