@@ -34,9 +34,11 @@ private:
 
 	void emitGeneratorParams(YAML::Emitter& out, GeneratorParameters& params);
 	void emitNoiseParameters(YAML::Emitter& out, NoiseParameters& params);
+	void emitColor(YAML::Emitter& out, float* color);
 
 	GeneratorParameters loadGeneratorParams(YAML::Node& node);
 	NoiseParameters loadNoiseParameter(YAML::Node& node);
+	void loadColorParameter(YAML::Node& node, float* color);
 
 	template<class T, int N>
 	int findIndex(const std::array<T, N>& a, const std::string& name)
