@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "generator/generator_buffer.h"
+#include "parameters/parameter_loader.h"
 
 class MapGenerator
 {
@@ -14,7 +15,7 @@ public:
 	using GeneratorBufferList = std::vector<GeneratorBuffer>;
 
 	virtual void generate(GeneratorBufferList&) = 0;
-	virtual void loadParams() = 0;
+	virtual void loadParams(ParameterLoader::GeneratorParameters&) = 0;
 
 	virtual std::string getName() const = 0;
 	virtual std::vector<std::string> getLayerNames() const = 0;

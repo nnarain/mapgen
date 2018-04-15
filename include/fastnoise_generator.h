@@ -11,10 +11,8 @@
 class FastNoiseGenerator : public MapGenerator
 {
 public:
-	FastNoiseGenerator(std::map<std::string, ParameterLoader::GeneratorParameters>& params):
-		params_(params[getName()])
+	FastNoiseGenerator()
 	{
-		loadParams();
 	}
 
 	virtual void generate(GeneratorBufferList& buffers) override
@@ -38,9 +36,9 @@ public:
 		}
 	}
 
-	virtual void loadParams() override
+	virtual void loadParams(ParameterLoader::GeneratorParameters& params) override
 	{
-		noise_ = FastNoiseFactory::create(params_["noise"].param.noise);
+		noise_ = FastNoiseFactory::create(params["noise"].param.noise);
 	}
 
 	virtual std::string getName() const override
@@ -54,8 +52,6 @@ public:
 	}
 
 private:
-	ParameterLoader::GeneratorParameters& params_;
-
 	FastNoise noise_;
 };
 

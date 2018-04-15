@@ -15,12 +15,13 @@ class ParameterLoader
 {
 public:
 	using GeneratorParameters = std::map<std::string, ParameterValue>;
+	using ParameterMap = std::map<std::string, GeneratorParameters>;
 
 	ParameterLoader(const std::string& file);
 
 	void save();
 
-	std::map<std::string, GeneratorParameters>& getParams();
+	ParameterMap& getParams();
 
 private:
 	std::array<std::string, 10> noise_types_;
@@ -55,7 +56,7 @@ private:
 		}
 	}
 
-	std::map<std::string, GeneratorParameters> generator_params_;
+	ParameterMap generator_params_;
 	std::string filename_;
 };
 
