@@ -11,14 +11,12 @@ FastNoise:
     celluar_distance: euclidean
     cellular_return: distance2add
     cellular_jitter: 0.1
-  mycolor:
-    color: 498a5aff
 Terrain:
   elevation:
     noise_type: cubic_fractal
     fractal_type: fbm
     interp_type: quintic
-    seed: -855
+    seed: -1538
     frequency: 0.01
     octaves: 5
     gain: 0.513
@@ -50,3 +48,12 @@ Terrain:
     celluar_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
+  water_light:
+    color: 40a3e8ff
+  water_dark:
+    color: 2755ebff
+  land_light:
+    color: ac8c33ff
+  land_dark:
+    color: 633f12ff
+  scale: 0.01

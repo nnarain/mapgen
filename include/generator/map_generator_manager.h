@@ -38,7 +38,6 @@ public:
 
 			if (std::chrono::duration_cast<std::chrono::milliseconds>(now - last_generated_) > timeout_)
 			{
-				std::cout << "generating\n";
 				// reload parameters
 				generator->loadParams(parameter_map_[generator->getName()]);
 				// generate

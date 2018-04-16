@@ -22,10 +22,10 @@ public:
 
 		unsigned int byte_offset = ((y * pixels_per_row) + x) * PIXEL_SIZE;
 
-		buffer_[byte_offset + 0] = pixel.r;
-		buffer_[byte_offset + 1] = pixel.g;
-		buffer_[byte_offset + 2] = pixel.b;
-		buffer_[byte_offset + 3] = pixel.a;
+		buffer_[byte_offset + 0] = (uint8_t)(pixel.r * 255.f);
+		buffer_[byte_offset + 1] = (uint8_t)(pixel.g * 255.f);
+		buffer_[byte_offset + 2] = (uint8_t)(pixel.b * 255.f);
+		buffer_[byte_offset + 3] = (uint8_t)(pixel.a * 255.f);
 	}
 
 	uint8_t* get()

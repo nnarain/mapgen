@@ -2,7 +2,7 @@
 #define FASTNOISE_GENERATOR_H
 
 #include "generator/map_generator.h"
-#include "generator/pixel.h"
+#include "generator/color.h"
 #include "parameters/parameter_loader.h"
 #include "factory/fastnoise_factory.h"
 
@@ -26,7 +26,7 @@ public:
 			{
 				auto sample = noise_.GetNoise((float)x, (float)y);
 			
-				Pixel p = Pixel::from(sample);
+				Color p = Color::from(sample);
 
 				buffers[0].write(x, y, p);
 			}

@@ -33,8 +33,17 @@ public:
 				
 				auto land_mask = (elevation > 0);
 
-				Pixel pe = Pixel::from(elevation);
-				Pixel pl = (land_mask) ? Pixel(183, 110, 0) : Pixel(41, 85, 244);
+				Color pe = Color::from(elevation);
+				
+				Color pl;
+				if (land_mask)
+				{
+					pl = Color::from(land_dark_, land_light_, elevation);
+				}
+				else 
+				{
+					pl = Color::from(water_light_, water_dark_, 1.f - elevation);
+				}
 
 				buffers[0].write(x, y, pe);
 				buffers[1].write(x, y, pl);
@@ -45,6 +54,13 @@ public:
 	virtual void loadParams(ParameterLoader::GeneratorParameters& params) override
 	{
 		elevation_ = FastNoiseFactory::create(getNoise(params, "elevation"));
+
+		land_light_ = Color::from(getColor(params, "land_light"));
+		land_dark_ = Color::from(getColor(params, "land_dark"));
+		water_light_ = Color::from(getColor(params, "water_light"));
+		water_dark_ = Color::from(getColor(params, "water_dark"));
+
+		scale_ = getFloat(params, "scale");
 	}
 
 	virtual std::string getName() const
@@ -60,6 +76,11 @@ private:
 	FastNoise elevation_;
 	FastNoise moisture_;
 	FastNoise temperature_;
+
+	Color land_light_, land_dark_;
+	Color water_light_, water_dark_;
+
+	float scale_;
 };
 
 #endif // TERRAIN_GENERATOR_H
