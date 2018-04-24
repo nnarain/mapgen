@@ -77,7 +77,7 @@ public:
 					cl = Color::from(land_dark_, land_light_, land_mask);
 
 					auto elevation = utils::range(elevation_.GetNoise(sampleX, sampleY), -1.f, 1.f, 0.f, 1.f);
-					ce = Color::from(land_dark_, land_light_, elevation);
+					ce = Color::from(Color(0), Color(1), elevation);
 
 					auto moisture = utils::range(moisture_.GetNoise(sampleX, sampleY), -1.f, 1.f, 0.f, 1.f);
 					cm = Color::from(water_light_, water_dark_, moisture);
@@ -90,10 +90,15 @@ public:
 					auto biome = getBiome(temperature, moisture);
 					cb = colorFromBiome(biome);
 
-					// final color
+					// final color. TODO: replace with gradients
 					cf = Color::from(cb, land_dark_, elevation);
 
-					if (hasTrees(biome))
+					if (elevation > mountain_height_)
+					{
+						cf = Color::from(stone_dark_, stone_light_, elevation);
+					}
+
+					else if (hasTrees(biome))
 					{
 						auto tree_value = utils::range(whitenoise.GetNoise(sampleX, sampleY), -1.f, 1.f, 0.f, 1.f);
 
@@ -235,10 +240,14 @@ public:
 		desert_ = Color::from(getColor(params, "desert"));
 		rainforest_ = Color::from(getColor(params, "rainforest"));
 		tree_ = Color::from(getColor(params, "tree"));
+		stone_light_ = Color::from(getColor(params, "stone_light"));
+		stone_dark_ = Color::from(getColor(params, "stone_dark"));
+
 
 		sea_level_ = getFloat(params, "sea_level");
 		scale_ = getFloat(params, "scale");
 		tree_percent_ = getFloat(params, "tree_percent");
+		mountain_height_ = getFloat(params, "mountain_height");
 
 		t1_ = getFloat(params, "t1");
 		t2_ = getFloat(params, "t2");
@@ -280,10 +289,13 @@ private:
 	Color desert_;
 	Color rainforest_;
 	Color tree_;
+	Color stone_light_;
+	Color stone_dark_;
 
 	float sea_level_;
 	float scale_;
 	float tree_percent_;
+	float mountain_height_;
 
 	float t1_; // tropical
 	float t2_; // temperate

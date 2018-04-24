@@ -28,7 +28,7 @@ Terrain:
     noise_type: cubic_fractal
     fractal_type: fbm
     interp_type: quintic
-    seed: -384
+    seed: -350
     frequency: 0.01
     octaves: 5
     gain: 0.513
@@ -58,6 +58,7 @@ Terrain:
   m3: 0.23
   lat_falloff: 0.92
   tree_percent: 0.045
+  mountain_height: 0.6
   water_light:
     color: 8fccf6ff
   water_dark:
@@ -65,7 +66,7 @@ Terrain:
   land_light:
     color: f8f6f1ff
   land_dark:
-    color: 837c11ff
+    color: 9d9c95ff
   grass:
     color: 3a8044ff
   hot:
@@ -90,3 +91,7 @@ Terrain:
     color: 96d14ff
   tree:
     color: 5745aff
+  stone_light:
+    color: c4cac9ff
+  stone_dark:
+    color: 1a1b1bff
