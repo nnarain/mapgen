@@ -1,8 +1,6 @@
 #ifndef PARAMETERS_NOISE_PARAMETERS_H
 #define PARAMETERS_NOISE_PARAMETERS_H
 
-#include <FastNoise.h>
-
 struct NoiseParameters
 {
 	int noise_type;
@@ -28,11 +26,11 @@ struct NoiseParameters
 		seed(0),
 		octaves(0), 
 		frequency(0.01f), 
-		gain(0),
+		gain(0.5f),
 		lacunarity(2.0f),
 		cellular_distance_function(0),
 		cellular_return_type(0),
-		cellular_jitter(0.45)
+		cellular_jitter(0.45f)
 	{
 	}
 };

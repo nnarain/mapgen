@@ -69,6 +69,7 @@ private:
 		if (layer_changed)
 		{
 			manager_.setCurrentLayer(current_layer);
+			manager_.setUpdateReady(true);
 		}
 	}
 

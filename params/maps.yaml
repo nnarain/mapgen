@@ -3,24 +3,95 @@ FastNoise:
     noise_type: cubic_fractal
     fractal_type: fbm
     interp_type: quintic
-    seed: -1709
-    frequency: 0.01
-    octaves: 4
-    gain: 0.581
-    lacunarity: 1.932
+    seed: -1026
+    frequency: 0.02
+    octaves: 5
+    gain: 0.577
+    lacunarity: 1.833
     celluar_distance: euclidean
     cellular_return: distance2add
     cellular_jitter: 0.1
 Terrain:
-  noise:
-    noise_type: simplex_fractal
+  land_mask:
+    noise_type: cubic_fractal
     fractal_type: fbm
     interp_type: quintic
-    seed: 0
+    seed: 15
     frequency: 0.01
-    octaves: 4
-    gain: 0.504
-    lacunarity: 1.675
+    octaves: 5
+    gain: 0.513
+    lacunarity: 1.906
     celluar_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
+  elevation:
+    noise_type: cubic_fractal
+    fractal_type: fbm
+    interp_type: quintic
+    seed: -350
+    frequency: 0.01
+    octaves: 5
+    gain: 0.513
+    lacunarity: 1.906
+    celluar_distance: euclidean
+    cellular_return: cellvalue
+    cellular_jitter: 0.45
+  moisture:
+    noise_type: cubic_fractal
+    fractal_type: fbm
+    interp_type: quintic
+    seed: -136
+    frequency: 0.01
+    octaves: 5
+    gain: 0.513
+    lacunarity: 1.906
+    celluar_distance: euclidean
+    cellular_return: cellvalue
+    cellular_jitter: 0.45
+  sea_level: -0.05
+  scale: 1
+  t1: 1.73
+  t2: 1.1
+  t3: 0.7
+  m1: 0.59
+  m2: 0.41
+  m3: 0.23
+  lat_falloff: 0.92
+  tree_percent: 0.045
+  mountain_height: 0.6
+  water_light:
+    color: 8fccf6ff
+  water_dark:
+    color: 2755ebff
+  land_light:
+    color: f8f6f1ff
+  land_dark:
+    color: 9d9c95ff
+  grass:
+    color: 3a8044ff
+  hot:
+    color: 9d3c32ff
+  cold:
+    color: 8fccf6ff
+  tundra:
+    color: b2e9f6ff
+  boreal:
+    color: 67ad69ff
+  boreal_barren:
+    color: 5d7a60ff
+  temperate:
+    color: 9af363ff
+  savanna:
+    color: c7b951ff
+  grassland:
+    color: 927f36ff
+  desert:
+    color: e9f165ff
+  rainforest:
+    color: 96d14ff
+  tree:
+    color: 5745aff
+  stone_light:
+    color: c4cac9ff
+  stone_dark:
+    color: 1a1b1bff

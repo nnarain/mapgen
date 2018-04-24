@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
 
 	// Create generators
 	std::vector<MapGenerator::Ptr> generators;
-	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator()));
 	generators.push_back(MapGenerator::Ptr(new TerrainGenerator()));
+	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator()));
 
 	MapGeneratorManager generator_manager(generators, parameters, BUFFER_SIZE);
 

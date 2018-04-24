@@ -3,6 +3,7 @@
 
 #include "generator/map_generator.h"
 
+#include <chrono>
 #include <vector>
 #include <string>
 
@@ -20,7 +21,8 @@ public:
 		current_layer(0),
 		buffer_width_(buffer_size),
 		buffer_height_(buffer_size),
-		update_ready_(false)
+		update_ready_(false),
+		timeout_(250)
 	{
 		setCurrentGenerator(current_map_generator_);
 	}
@@ -32,10 +34,17 @@ public:
 
 		if (generator)
 		{
-			// reload parameters
-			generator->loadParams(parameter_map_[generator->getName()]);
-			// generate
-			generator->generate(layers_);
+			auto now = clock::now();
+
+			if (std::chrono::duration_cast<std::chrono::milliseconds>(now - last_generated_) > timeout_)
+			{
+				// reload parameters
+				generator->loadParams(parameter_map_[generator->getName()]);
+				// generate
+				generator->generate(layers_);
+
+				last_generated_ = clock::now();
+			}
 		}
 
 		update_ready_ = true;
@@ -50,6 +59,11 @@ public:
 	bool isUpdateReady() const
 	{
 		return update_ready_;
+	}
+
+	void setUpdateReady(bool ready)
+	{
+		update_ready_ = ready;
 	}
 
 	const MapGenerator::Ptr& getCurrentMapGenerator() const
@@ -92,6 +106,8 @@ public:
 	}
 
 private:
+	using clock = std::chrono::system_clock;
+
 	GeneratorList& generators_;
 	LayerList layers_;
 	ParameterLoader::ParameterMap& parameter_map_;
@@ -101,6 +117,8 @@ private:
 	int buffer_height_;
 
 	bool update_ready_;
+	clock::time_point last_generated_;
+	std::chrono::milliseconds timeout_;
 };
 
 #endif // GENERATOR_MAP_GENERATOR_MANAGER_H
