@@ -2,7 +2,7 @@
 #define FASTNOISE_GENERATOR_H
 
 #include "generator/map_generator.h"
-#include "generator/pixel.h"
+#include "generator/color.h"
 #include "parameters/parameter_loader.h"
 #include "factory/fastnoise_factory.h"
 
@@ -11,10 +11,8 @@
 class FastNoiseGenerator : public MapGenerator
 {
 public:
-	FastNoiseGenerator(std::map<std::string, ParameterLoader::GeneratorParameters>& params):
-		params_(params[getName()])
+	FastNoiseGenerator()
 	{
-		loadParams();
 	}
 
 	virtual void generate(GeneratorBufferList& buffers) override
@@ -26,21 +24,18 @@ public:
 		{
 			for (int y = 0; y < height; ++y)
 			{
-				auto sample = noise_.GetNoise(x, y);
+				auto sample = noise_.GetNoise((float)x, (float)y);
 			
-				Pixel p;
-				p.r = sample * 255.0f;
-				p.g = sample * 255.0f;
-				p.b = sample * 255.0f;
+				Color p = Color::from(sample);
 
 				buffers[0].write(x, y, p);
 			}
 		}
 	}
 
-	virtual void loadParams() override
+	virtual void loadParams(ParameterLoader::GeneratorParameters& params) override
 	{
-		noise_ = FastNoiseFactory::create(params_["noise"].param.noise);
+		noise_ = FastNoiseFactory::create(getNoise(params, "noise"));
 	}
 
 	virtual std::string getName() const override
@@ -54,8 +49,6 @@ public:
 	}
 
 private:
-	ParameterLoader::GeneratorParameters& params_;
-
 	FastNoise noise_;
 };
 

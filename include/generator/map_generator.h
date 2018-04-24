@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "generator/generator_buffer.h"
+#include "parameters/parameter_loader.h"
 
 class MapGenerator
 {
@@ -14,11 +15,39 @@ public:
 	using GeneratorBufferList = std::vector<GeneratorBuffer>;
 
 	virtual void generate(GeneratorBufferList&) = 0;
-	virtual void loadParams() = 0;
+	virtual void loadParams(ParameterLoader::GeneratorParameters&) = 0;
 
 	virtual std::string getName() const = 0;
 	virtual std::vector<std::string> getLayerNames() const = 0;
 
+protected:
+	ParameterValue & getParam(ParameterLoader::GeneratorParameters& params, const std::string& name)
+	{
+		for (auto& param : params)
+		{
+			if (param.first == name)
+			{
+				return param.second;
+			}
+		}
+
+		throw std::runtime_error("Could not find parameter value");
+	}
+
+	NoiseParameters& getNoise(ParameterLoader::GeneratorParameters& params, const std::string& name)
+	{
+		return getParam(params, name).param.noise;
+	}
+
+	float* getColor(ParameterLoader::GeneratorParameters& params, const std::string& name)
+	{
+		return &getParam(params, name).param.color[0];
+	}
+
+	float getFloat(ParameterLoader::GeneratorParameters& params, const std::string& name)
+	{
+		return getParam(params, name).param.value;
+	}
 };
 
 #endif  // GENERATOR_MAP_GENERATOR_H

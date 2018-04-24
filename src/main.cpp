@@ -12,9 +12,11 @@
 #include "generator/map_generator_manager.h"
 
 #include "fastnoise_generator.h"
+#include "terrain_generator.h"
 
 #include <iostream>
 
+static const int BUFFER_SIZE = 512;
 
 int main(int argc, char *argv[])
 {
@@ -31,13 +33,18 @@ int main(int argc, char *argv[])
 
 	// Create generators
 	std::vector<MapGenerator::Ptr> generators;
-	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator(parameters)));
+	generators.push_back(MapGenerator::Ptr(new TerrainGenerator()));
+	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator()));
 
-	MapGeneratorManager generator_manager(generators);
+	MapGeneratorManager generator_manager(generators, parameters, BUFFER_SIZE);
 
 	// Create ui components
 	ParameterWindow parameter_window(parameters);
-	MapDisplayWindow map_display_window(generator_manager);
+	parameter_window.setSaveCallback([&] {
+		loader.save();
+	});
+
+	MapDisplayWindow map_display_window(generator_manager, BUFFER_SIZE);
 
 	// Init SFML
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
@@ -66,17 +73,20 @@ int main(int argc, char *argv[])
 		ImGui::SFML::Update(window, deltaClock.restart());
 		
 		// draw gui
-		bool updated = parameter_window.update();
+		bool params_updated = parameter_window.update(generator_manager.getCurrentMapGenerator()->getName());
 
-		if (updated || first_pass)
+		if (params_updated || first_pass)
 		{
 			generator_manager.generate();
-			map_display_window.updateTexture(static_cast<sf::Uint8*>(generator_manager.getBufferData()));
-
 			first_pass = false;
 		}
 
 		map_display_window.update();
+
+		if (generator_manager.isUpdateReady())
+		{
+			map_display_window.updateTexture(static_cast<sf::Uint8*>(generator_manager.getBufferData()));
+		}
 
 		//ImGui::ShowDemoWindow();
 

@@ -9,22 +9,38 @@
 #include <array>
 #include <map>
 #include <string>
+#include <vector>
+#include <utility>
 #include <iostream>
 
 class ParameterLoader
 {
 public:
-	using GeneratorParameters = std::map<std::string, ParameterValue>;
+	using GeneratorParameters = std::vector<std::pair<std::string, ParameterValue>>;
+	using ParameterMap = std::map<std::string, GeneratorParameters>;
 
 	ParameterLoader(const std::string& file);
 
-	std::map<std::string, GeneratorParameters>& getParams();
+	void save();
+
+	ParameterMap& getParams();
 
 private:
+	std::array<std::string, 10> noise_types_;
+	std::array<std::string, 3> interp_types_;
+	std::array<std::string, 3> fractal_types_;
+	std::array<std::string, 3> cellular_distance_function_;
+	std::array<std::string, 8> cellular_return_type_;
+
 	void load(YAML::Node& node);
+
+	void emitGeneratorParams(YAML::Emitter& out, GeneratorParameters& params);
+	void emitNoiseParameters(YAML::Emitter& out, NoiseParameters& params);
+	void emitColor(YAML::Emitter& out, float* color);
 
 	GeneratorParameters loadGeneratorParams(YAML::Node& node);
 	NoiseParameters loadNoiseParameter(YAML::Node& node);
+	void loadColorParameter(YAML::Node& node, float* color);
 
 	template<class T, int N>
 	int findIndex(const std::array<T, N>& a, const std::string& name)
@@ -44,7 +60,8 @@ private:
 		}
 	}
 
-	std::map<std::string, GeneratorParameters> generator_params;
+	ParameterMap generator_params_;
+	std::string filename_;
 };
 
 #endif  // PARAMETERS_PARAMETER_LOADER_H
