@@ -134,7 +134,7 @@ private:
 		bool param_updated = false;
 		param_updated = ImGui::Combo("Noise Type", &params.noise_type, noise_types, IM_ARRAYSIZE(noise_types)) || param_updated;
 		param_updated = ImGui::DragInt("seed", &params.seed) || param_updated;
-		param_updated = ImGui::DragFloat("frequency", &params.frequency) || param_updated;
+		param_updated = ImGui::DragFloat("frequency", &params.frequency, 0.01f) || param_updated;
 
 		auto type = params.noise_type;
 

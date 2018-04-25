@@ -44,6 +44,7 @@ set(HEADERS
 
     include/fastnoise_generator.h
     include/terrain_generator.h
+    include/terrain2_generator.h
 )
 
 # Map Generator
