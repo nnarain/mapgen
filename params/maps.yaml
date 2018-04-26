@@ -156,6 +156,8 @@ Terrain2:
   shore_distance: 0.01
   tree_percent: 0.045
   mountain_height: 0.54
+  snow_height: 0.67
+  ice_temperature: 0.32
   water_light:
     color: 8fccf6ff
   water_dark:
