@@ -82,8 +82,6 @@ public:
 					auto moisture = utils::range(moisture_.GetNoise(sampleX, sampleY), -1.f, 1.f, 0.f, 1.f);
 					cm = Color::from(water_light_, water_dark_, moisture);
 
-					auto half = (float)height / 2.0f;
-					auto lat_temperature = 1.f - (std::abs(sampleY - half) / half);
 					auto temperature = utils::range(temperature_.GetNoise(sampleX, sampleY), -1.f, 1.f, 0.f, 1.f) * 2.f;
 					ct = Color::from(cold_, hot_, temperature / 2.f);
 
@@ -95,7 +93,14 @@ public:
 
 					if (elevation > mountain_height_)
 					{
-						cf = Color::from(stone_dark_, stone_light_, elevation);
+						if (elevation > snow_height_)
+						{
+							cf = Color::from(tundra_, Color(1), elevation);
+						}
+						else
+						{
+							cf = Color::from(stone_dark_, stone_light_, elevation);
+						}
 					}
 					else if (isShoreLine(land_mask, elevation))
 					{
@@ -114,7 +119,18 @@ public:
 				else
 				{
 					cl = Color::from(water_light_, water_dark_, 1.0f - land_mask);
-					cf = Color::from(water_light_, water_dark_, 1.0f - land_mask);
+
+					auto temperature = utils::range(temperature_.GetNoise(sampleX, sampleY), -1.f, 1.f, 0.f, 1.f);
+					
+					if (temperature <= ice_temperature_)
+					{
+						cf = cold_;
+					}
+					else
+					{
+						cf = Color::from(water_light_, water_dark_, 1.0f - land_mask);
+					}
+
 				}
 
 				buffers[Land].write(x, y, cl);
@@ -259,6 +275,8 @@ public:
 		mountain_height_ = getFloat(params, "mountain_height");
 		shore_height_ = getFloat(params, "shore_height");
 		shore_distance_ = getFloat(params, "shore_distance");
+		snow_height_ = getFloat(params, "snow_height");
+		ice_temperature_ = getFloat(params, "ice_temperature");
 
 		t1_ = getFloat(params, "t1");
 		t2_ = getFloat(params, "t2");
@@ -308,6 +326,8 @@ private:
 	float mountain_height_;
 	float shore_height_;
 	float shore_distance_;
+	float snow_height_;
+	float ice_temperature_;
 
 	float t1_; // tropical
 	float t2_; // temperate
