@@ -17,7 +17,8 @@ class MapDisplayWindow : Window
 public:
 	MapDisplayWindow(MapGeneratorManager& manager, int texture_size) :
 		manager_(manager),
-		selected_generator_(0)
+		current_generator_(0),
+		current_layer_(0)
 	{
 		generator_names_ = manager.getGeneratorNames();
 		layer_names_ = manager.getCurrentLayerNames();
@@ -31,6 +32,12 @@ public:
 		if (ImGui::Begin("Map"))
 		{
 			drawMapSelection();
+
+			if (ImGui::Button("Save"))
+			{
+				saveMap();
+			}
+
 			drawMap();
 
 			ImGui::End();
@@ -47,28 +54,25 @@ public:
 private:
 	void drawMapSelection()
 	{
-		static int current_generator = 0;
-		static int current_layer = 0;
-
-		bool generator_changed = ImGui::Combo("Generators", &current_generator, generator_names_, generator_names_.size());
+		bool generator_changed = ImGui::Combo("Generators", &current_generator_, generator_names_, generator_names_.size());
 
 		if (generator_changed)
 		{
 			// if the generator has been updated, select the generator in the manager
-			manager_.setCurrentGenerator(current_generator);
+			manager_.setCurrentGenerator(current_generator_);
 			layer_names_ = manager_.getCurrentLayerNames();
 
-			current_layer = 0;
+			current_layer_ = 0;
 
 			// generate the new map
 			manager_.generate();
 		}
 
-		bool layer_changed = ImGui::Combo("Layers", &current_layer, layer_names_, layer_names_.size());
+		bool layer_changed = ImGui::Combo("Layers", &current_layer_, layer_names_, layer_names_.size());
 
 		if (layer_changed)
 		{
-			manager_.setCurrentLayer(current_layer);
+			manager_.setCurrentLayer(current_layer_);
 			manager_.setUpdateReady(true);
 		}
 	}
@@ -84,10 +88,23 @@ private:
 		ImGui::Image(sprite_);
 	}
 
+	void saveMap()
+	{
+		const sf::Image image = texture_.copyToImage();
+		image.saveToFile(getFileName());
+	}
+
+	std::string getFileName() const
+	{
+		return generator_names_[current_generator_] + layer_names_[current_layer_] + ".png";
+	}
+
 	MapGeneratorManager& manager_;
 	std::vector<std::string> generator_names_;
 	std::vector<std::string> layer_names_;
-	int selected_generator_;
+
+	int current_generator_ ;
+	int current_layer_;
 
 	sf::Texture texture_;
 	sf::Sprite sprite_;
