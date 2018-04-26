@@ -97,7 +97,10 @@ public:
 					{
 						cf = Color::from(stone_dark_, stone_light_, elevation);
 					}
-
+					else if (isShoreLine(land_mask, elevation))
+					{
+						cf = Color::from(desert_, land_dark_, elevation);
+					}
 					else if (hasTrees(biome))
 					{
 						auto tree_value = utils::range(whitenoise.GetNoise(sampleX, sampleY), -1.f, 1.f, 0.f, 1.f);
@@ -124,6 +127,11 @@ public:
 		}
 	}
 	
+	bool isShoreLine(float land_mask, float elevation)
+	{
+		return (std::abs(land_mask - sea_level_) <= shore_distance_) && (elevation <= shore_height_);
+	}
+
 	bool hasTrees(Biome b)
 	{
 		return b == Biome::BorealForest || b == Biome::TemperatelForest;
@@ -249,6 +257,8 @@ public:
 		scale_ = getFloat(params, "scale");
 		tree_percent_ = getFloat(params, "tree_percent");
 		mountain_height_ = getFloat(params, "mountain_height");
+		shore_height_ = getFloat(params, "shore_height");
+		shore_distance_ = getFloat(params, "shore_distance");
 
 		t1_ = getFloat(params, "t1");
 		t2_ = getFloat(params, "t2");
@@ -257,8 +267,6 @@ public:
 		m1_ = getFloat(params, "m1");
 		m2_ = getFloat(params, "m2");
 		m3_ = getFloat(params, "m3");
-
-		lat_falloff_ = getFloat(params, "lat_falloff");
 	}
 
 	virtual std::string getName() const
@@ -298,6 +306,8 @@ private:
 	float scale_;
 	float tree_percent_;
 	float mountain_height_;
+	float shore_height_;
+	float shore_distance_;
 
 	float t1_; // tropical
 	float t2_; // temperate
@@ -307,10 +317,6 @@ private:
 	float m2_;
 	float m3_;
 	float m4_;
-
-
-
-	float lat_falloff_;
 };
 
 #endif // TERRAIN2_GENERATOR_H
