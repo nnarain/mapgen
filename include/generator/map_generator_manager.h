@@ -2,16 +2,20 @@
 #define GENERATOR_MAP_GENERATOR_MANAGER_H
 
 #include "generator/map_generator.h"
+#include "generator/generator_buffer_proxy.h"
 
+#include <array>
 #include <chrono>
 #include <vector>
 #include <string>
+#include <thread>
 
 class MapGeneratorManager
 {
 public:
 	using GeneratorList = std::vector<MapGenerator::Ptr>;
 	using LayerList = std::vector<GeneratorBuffer>;
+	using ProxyList = std::vector<GeneratorBufferProxy>;
 
 	MapGeneratorManager(GeneratorList& list, ParameterLoader::ParameterMap& parameter_map, int buffer_size) :
 		generators_(list),
@@ -21,8 +25,7 @@ public:
 		current_layer(0),
 		buffer_width_(buffer_size),
 		buffer_height_(buffer_size),
-		update_ready_(false),
-		timeout_(250)
+		update_ready_(false)
 	{
 		setCurrentGenerator(current_map_generator_);
 	}
@@ -34,20 +37,36 @@ public:
 
 		if (generator)
 		{
-			auto now = clock::now();
+			// reload parameters
+			generator->loadParams(parameter_map_[generator->getName()]);
 
-			if (std::chrono::duration_cast<std::chrono::milliseconds>(now - last_generated_) > timeout_)
-			{
-				// reload parameters
-				generator->loadParams(parameter_map_[generator->getName()]);
-				// generate
-				generator->generate(layers_);
+			auto w = buffer_width_ / 2;
+			auto h = buffer_height_ / 2;
 
-				last_generated_ = clock::now();
-			}
+			auto t1 = startWorker(generator, 0, 0, w, h);
+			auto t2 = startWorker(generator, w, 0, w, h);
+			auto t3 = startWorker(generator, 0, h, w, h);
+			auto t4 = startWorker(generator, w, h, w, h);
+			
+			t1.join();
+			t2.join();
+			t3.join();
+			t4.join();
 		}
 
 		update_ready_ = true;
+	}
+
+	std::thread startWorker(MapGenerator::Ptr& ptr, int x, int y, int w, int h)
+	{
+		ProxyList proxies;
+
+		for (auto& buffer : layers_)
+		{
+			proxies.emplace_back(buffer, x, y, w, h);
+		}
+
+		return std::thread(&MapGenerator::generate, ptr.get(), proxies);
 	}
 
 	uint8_t* getBufferData()
@@ -110,15 +129,16 @@ private:
 
 	GeneratorList& generators_;
 	LayerList layers_;
+	ProxyList proxies_;
+
 	ParameterLoader::ParameterMap& parameter_map_;
+
 	int current_map_generator_;
 	int current_layer;
 	int buffer_width_;
 	int buffer_height_;
 
-	bool update_ready_;
-	clock::time_point last_generated_;
-	std::chrono::milliseconds timeout_;
+	volatile bool update_ready_;
 };
 
 #endif // GENERATOR_MAP_GENERATOR_MANAGER_H

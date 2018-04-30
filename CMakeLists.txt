@@ -34,6 +34,7 @@ set(HEADERS
     include/generator/map_generator.h
     include/generator/map_generator_manager.h
     include/generator/generator_buffer.h
+    include/generator/generator_buffer_proxy.h
     include/generator/color.h
     include/generator/gradient.h
 

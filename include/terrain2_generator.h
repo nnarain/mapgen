@@ -47,15 +47,17 @@ public:
 
 	virtual void generate(GeneratorBufferList& buffers)
 	{
-		const auto width = buffers[0].getWidth();
-		const auto height = buffers[0].getHeight();
+		const auto startX = buffers[0].startX();
+		const auto startY = buffers[0].startY();
+		const auto endX = buffers[0].endX();
+		const auto endY = buffers[0].endY();
 
 		FastNoise whitenoise;
 		whitenoise.SetNoiseType(FastNoise::WhiteNoise);
 
-		for (int x = 0; x < width; ++x)
+		for (int x = startX; x < endX; ++x)
 		{
-			for (int y = 0; y < height; ++y)
+			for (int y = startY; y < endY; ++y)
 			{
 				auto sampleX = (float)x / scale_;
 				auto sampleY = (float)y / scale_;
