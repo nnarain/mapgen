@@ -6,13 +6,14 @@
 #include <vector>
 
 #include "generator/generator_buffer.h"
+#include "generator/generator_buffer_proxy.h"
 #include "parameters/parameter_loader.h"
 
 class MapGenerator
 {
 public:
 	using Ptr = std::unique_ptr<MapGenerator>;
-	using GeneratorBufferList = std::vector<GeneratorBuffer>;
+	using GeneratorBufferList = std::vector<GeneratorBufferProxy>;
 
 	virtual void generate(GeneratorBufferList&) = 0;
 	virtual void loadParams(ParameterLoader::GeneratorParameters&) = 0;
