@@ -134,7 +134,7 @@ private:
 		bool param_updated = false;
 		param_updated = ImGui::Combo("Noise Type", &params.noise_type, noise_types, IM_ARRAYSIZE(noise_types)) || param_updated;
 		param_updated = ImGui::DragInt("seed", &params.seed) || param_updated;
-		param_updated = ImGui::DragFloat("frequency", &params.frequency, 0.01f) || param_updated;
+		param_updated = ImGui::DragFloat("frequency", &params.frequency, 0.001f) || param_updated;
 
 		auto type = params.noise_type;
 
@@ -159,7 +159,7 @@ private:
 				&params.cellular_distance_function, cellular_distance_function, IM_ARRAYSIZE(cellular_distance_function)) || param_updated;
 			param_updated = ImGui::Combo("Return Type",
 				&params.cellular_return_type, cellular_return_type, IM_ARRAYSIZE(cellular_return_type)) || param_updated;
-			param_updated = ImGui::InputFloat("jitter", &params.cellular_jitter) || param_updated;
+			param_updated = ImGui::DragFloat("jitter", &params.cellular_jitter, 0.001f) || param_updated;
 		}
 
 		return param_updated;

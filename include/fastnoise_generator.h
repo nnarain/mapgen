@@ -26,7 +26,7 @@ public:
 		{
 			for (int y = startY; y < endY; ++y)
 			{
-				auto sample = noise_.GetNoise((float)x, (float)y);
+				auto sample = utils::range(noise_.GetNoise((float)x, (float)y), -1.f, 1.f, 0.f, 1.f);
 			
 				Color p = Color::from(sample);
 

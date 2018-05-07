@@ -14,6 +14,7 @@
 #include "fastnoise_generator.h"
 #include "terrain_generator.h"
 #include "terrain2_generator.h"
+#include "mountain_generator.h"
 
 #include <iostream>
 
@@ -34,6 +35,7 @@ int main(int argc, char *argv[])
 
 	// Create generators
 	std::vector<MapGenerator::Ptr> generators;
+	generators.push_back(MapGenerator::Ptr(new MountainGenerator()));
 	generators.push_back(MapGenerator::Ptr(new TerrainGenerator2()));
 	generators.push_back(MapGenerator::Ptr(new TerrainGenerator()));
 	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator()));

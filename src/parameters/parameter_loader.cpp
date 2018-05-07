@@ -79,7 +79,7 @@ void ParameterLoader::emitNoiseParameters(YAML::Emitter& out, NoiseParameters& p
 	out << YAML::Key << "octaves" << YAML::Value << params.octaves;
 	out << YAML::Key << "gain" << YAML::Value << params.gain;
 	out << YAML::Key << "lacunarity" << YAML::Value << params.lacunarity;
-	out << YAML::Key << "celluar_distance" << YAML::Value << cellular_distance_function_[params.cellular_distance_function];
+	out << YAML::Key << "cellular_distance" << YAML::Value << cellular_distance_function_[params.cellular_distance_function];
 	out << YAML::Key << "cellular_return" << YAML::Value << cellular_return_type_[params.cellular_return_type];
 	out << YAML::Key << "cellular_jitter" << YAML::Value << params.cellular_jitter;
 	out << YAML::EndMap;
