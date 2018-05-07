@@ -8,9 +8,39 @@ FastNoise:
     octaves: 5
     gain: 0.577
     lacunarity: 1.833
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: distance2add
     cellular_jitter: 0.1
+Mountain:
+  mountain_mask:
+    noise_type: cellular
+    fractal_type: fbm
+    interp_type: quintic
+    seed: 23
+    frequency: 0.037
+    octaves: 0
+    gain: 0.5
+    lacunarity: 2
+    cellular_distance: natural
+    cellular_return: noiselookup
+    cellular_jitter: 0.472
+  mountain_lookup:
+    noise_type: simplex_fractal
+    fractal_type: fbm
+    interp_type: quintic
+    seed: 23
+    frequency: 0.054
+    octaves: 4
+    gain: 0.603
+    lacunarity: 2
+    cellular_distance: euclidean
+    cellular_return: cellvalue
+    cellular_jitter: 0.45
+  threshold: 0.6900001
+  x_offset: 0
+  y_offset: 0
+  scroll_speed: 1
+  scale: 0.36
 Terrain:
   land_mask:
     noise_type: cubic_fractal
@@ -21,7 +51,7 @@ Terrain:
     octaves: 5
     gain: 0.513
     lacunarity: 1.906
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
   elevation:
@@ -33,7 +63,7 @@ Terrain:
     octaves: 5
     gain: 0.513
     lacunarity: 1.906
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
   moisture:
@@ -45,7 +75,7 @@ Terrain:
     octaves: 5
     gain: 0.513
     lacunarity: 1.906
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
   sea_level: -0.05
@@ -105,7 +135,7 @@ Terrain2:
     octaves: 5
     gain: 0.513
     lacunarity: 1.906
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
   elevation:
@@ -117,7 +147,7 @@ Terrain2:
     octaves: 5
     gain: 0.513
     lacunarity: 1.906
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
   moisture:
@@ -129,7 +159,7 @@ Terrain2:
     octaves: 4
     gain: 0.513
     lacunarity: 1.906
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
   temperature:
@@ -141,7 +171,7 @@ Terrain2:
     octaves: 5
     gain: 0.513
     lacunarity: 1.906
-    celluar_distance: euclidean
+    cellular_distance: euclidean
     cellular_return: cellvalue
     cellular_jitter: 0.45
   sea_level: -0.05
