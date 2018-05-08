@@ -13,3 +13,6 @@
 [submodule "src/external/luabind"]
 	path = src/external/luabind
 	url = https://github.com/nnarain/luabind.git
+[submodule "src/external/luajit/LuaJIT"]
+	path = src/external/luajit/LuaJIT
+	url = https://github.com/LuaJIT/LuaJIT.git
