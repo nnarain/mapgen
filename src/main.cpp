@@ -33,14 +33,7 @@ int main(int argc, char *argv[])
 	ParameterLoader loader(param_file);
 	auto& parameters = loader.getParams();
 
-	// Create generators
-	std::vector<MapGenerator::Ptr> generators;
-	generators.push_back(MapGenerator::Ptr(new MountainGenerator()));
-	generators.push_back(MapGenerator::Ptr(new TerrainGenerator2()));
-	generators.push_back(MapGenerator::Ptr(new TerrainGenerator()));
-	generators.push_back(MapGenerator::Ptr(new FastNoiseGenerator()));
-
-	MapGeneratorManager generator_manager(generators, parameters, BUFFER_SIZE);
+	MapGeneratorManager generator_manager(parameters, BUFFER_SIZE);
 
 	// Create ui components
 	ParameterWindow parameter_window(parameters);
@@ -77,7 +70,7 @@ int main(int argc, char *argv[])
 		ImGui::SFML::Update(window, deltaClock.restart());
 		
 		// draw gui
-		bool params_updated = parameter_window.update(generator_manager.getCurrentMapGenerator()->getName());
+		bool params_updated = parameter_window.update();
 
 		if (params_updated || first_pass)
 		{
