@@ -61,3 +61,9 @@ set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "Enable contrib")
 add_subdirectory(yaml-cpp)
 
 set(YAML_CPP_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/yaml-cpp/include", PARENT_SCOPE)
+
+##########################
+### LuaJIT and Luabind ###
+##########################
+
+add_subdirectory(luabind)
