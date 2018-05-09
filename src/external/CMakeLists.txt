@@ -68,3 +68,6 @@ set(YAML_CPP_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/yaml-cpp/include" PARENT_SCO
 
 add_subdirectory(luajit)
 add_subdirectory(luabind)
+
+set(LUA_INCLUDE_DIRS ${LUA_INCLUDE_DIRS} PARENT_SCOPE)
+set(LUABIND_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/luabind" PARENT_SCOPE)

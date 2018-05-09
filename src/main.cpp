@@ -10,6 +10,7 @@
 #include "parameters/parameter_loader.h"
 #include "generator/map_generator.h"
 #include "generator/map_generator_manager.h"
+#include "script/script_engine.h"
 
 #include "fastnoise_generator.h"
 #include "terrain_generator.h"
@@ -22,16 +23,19 @@ static const int BUFFER_SIZE = 512;
 
 int main(int argc, char *argv[])
 {
-	if (argc < 2)
+	if (argc < 3)
 	{
 		std::cerr << "Invalid number of arguments" << std::endl;
 		return 1;
 	}
 
 	// Load parameters
-	const std::string param_file(argv[1]);
+	const std::string param_file(argv[2]);
 	ParameterLoader loader(param_file);
 	auto& parameters = loader.getParams();
+
+    std::string script = std::string(argv[1]);
+    ScriptEngine engine(script);
 
 	MapGeneratorManager generator_manager(parameters, BUFFER_SIZE);
 

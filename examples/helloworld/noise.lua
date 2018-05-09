@@ -1,3 +1,3 @@
-function generate(layers)
-
+function generate()
+    print 'hello world'
 end
