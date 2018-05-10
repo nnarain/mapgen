@@ -45,6 +45,7 @@ set(HEADERS
 
     include/script/script_engine.h
     include/script/generator_script.h
+    include/script/layers.h
 
     include/imgui_extension/imgui_extension.h
     include/utils/utils.h
@@ -62,6 +63,8 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/parameters/parameter_loader.cpp
     src/imgui_extension/imgui_extension.cpp
+
+    src/script/script_engine.cpp
 
     ${HEADERS}
 )

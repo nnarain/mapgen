@@ -3,6 +3,8 @@
 
 #include "generator/map_generator.h"
 #include "generator/generator_buffer_proxy.h"
+#include "script/script_engine.h"
+#include "script/generator_script.h"
 
 #include <array>
 #include <chrono>
@@ -16,7 +18,8 @@ public:
 	using LayerList = std::vector<GeneratorBuffer>;
 	using ProxyList = std::vector<GeneratorBufferProxy>;
 
-	MapGeneratorManager(ParameterLoader::GeneratorParameters& parameter_map, int buffer_size) :
+	MapGeneratorManager(ScriptEngine& engine, ParameterLoader::GeneratorParameters& parameter_map, int buffer_size) :
+        engine_(engine),
 		layers_(),
 		parameter_list_(parameter_map),
 		current_layer(0),
@@ -24,15 +27,33 @@ public:
 		buffer_height_(buffer_size),
 		update_ready_(false)
 	{
+        layers_.emplace_back(buffer_width_, buffer_height_);
 
+        for (auto i = 0u; i < generators_.size(); ++i)
+        {
+            generators_[i] = engine.createGenerator();
+        }
 	}
 
 	void generate()
 	{
+        auto w = buffer_width_ / 2;
+        auto h = buffer_height_ / 2;
 
+        auto t1 = startWorker(generators_[0], 0, 0, w, h);
+        auto t2 = startWorker(generators_[1], w, 0, w, h);
+        auto t3 = startWorker(generators_[2], 0, h, w, h);
+        auto t4 = startWorker(generators_[3], w, h, w, h);
+
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+
+        update_ready_ = true;
 	}
 
-	std::thread startWorker(int x, int y, int w, int h)
+	std::thread startWorker(GeneratorScript::Ptr& generator, int x, int y, int w, int h)
 	{
 		ProxyList proxies;
 
@@ -41,7 +62,9 @@ public:
 			proxies.emplace_back(buffer, x, y, w, h);
 		}
 
-		return std::thread();
+        Layers layers(proxies);
+
+		return std::thread(&GeneratorScript::generate, generator.get(), layers);
 	}
 
 	uint8_t* getBufferData()
@@ -71,8 +94,11 @@ public:
 	}
 
 private:
+    ScriptEngine & engine_;
 	LayerList layers_;
 	ProxyList proxies_;
+
+    std::array<GeneratorScript::Ptr, 4> generators_;
 
 	ParameterLoader::GeneratorParameters& parameter_list_;
 

@@ -2,6 +2,7 @@
 #define GENERATOR_GENERATOR_BUFFER_PROXY_H
 
 #include "generator/generator_buffer.h"
+#include "generator/color.h"
 
 class GeneratorBufferProxy
 {
@@ -17,10 +18,9 @@ public:
 
 	}
 
-	template<typename PixelT>
-	void write(int x, int y, PixelT& pixel)
+	void write(int x, int y, Color& c)
 	{
-		buffer_.write(x, y, pixel);
+		buffer_.write(x, y, c);
 	}
 
 	const GeneratorBuffer& getBuffer() const

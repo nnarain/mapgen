@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     std::string script = std::string(argv[1]);
     ScriptEngine engine(script);
 
-	MapGeneratorManager generator_manager(parameters, BUFFER_SIZE);
+	MapGeneratorManager generator_manager(engine, parameters, BUFFER_SIZE);
 
 	// Create ui components
 	ParameterWindow parameter_window(parameters);
