@@ -9,6 +9,8 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <sstream>
 
 class GeneratorScript
 {
@@ -36,6 +38,21 @@ public:
             std::string error = lua_tostring(e.state(), -1);
             std::cout << error << std::endl;
         }
+    }
+
+    std::vector<std::string> getLayerNames()
+    {
+        auto globals = luabind::globals(L_);
+        auto layers = luabind::object_cast<std::string>(globals["LAYERS"]);
+
+        std::stringstream ss(layers);
+
+        std::vector<std::string> layer_names{ 
+            std::istream_iterator<std::string>{ss},
+            std::istream_iterator<std::string>{}
+        };
+
+        return layer_names;
     }
 
 private:

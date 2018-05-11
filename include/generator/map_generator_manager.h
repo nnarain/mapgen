@@ -27,11 +27,16 @@ public:
 		buffer_height_(buffer_size),
 		update_ready_(false)
 	{
-        layers_.emplace_back(buffer_width_, buffer_height_);
-
         for (auto i = 0u; i < generators_.size(); ++i)
         {
             generators_[i] = engine.createGenerator();
+        }
+
+        layer_names_ = generators_[0]->getLayerNames();
+
+        for (int i = 0; i < layer_names_.size(); ++i)
+        {
+            layers_.emplace_back(buffer_width_, buffer_height_);
         }
 	}
 
@@ -88,15 +93,16 @@ public:
 		current_layer = select;
 	}
 
-	std::vector<std::string> getCurrentLayerNames() const
+	const std::vector<std::string>& getCurrentLayerNames() const
 	{
-		return std::vector<std::string>();
+		return layer_names_;
 	}
 
 private:
     ScriptEngine & engine_;
 	LayerList layers_;
 	ProxyList proxies_;
+    std::vector<std::string> layer_names_;
 
     std::array<GeneratorScript::Ptr, 4> generators_;
 

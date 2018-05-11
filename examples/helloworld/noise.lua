@@ -1,3 +1,5 @@
+LAYERS = "Default Mask"
+
 function generate(layers)
     c = Color(0)
     c.r = 1
