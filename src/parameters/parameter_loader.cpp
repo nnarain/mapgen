@@ -17,7 +17,7 @@ ParameterLoader::ParameterLoader(const std::string& file) :
 	load(root);
 }
 
-std::map<std::string, ParameterLoader::GeneratorParameters>& ParameterLoader::getParams()
+ParameterLoader::GeneratorParameters& ParameterLoader::getParams()
 {
 	return generator_params_;
 }
@@ -25,15 +25,9 @@ std::map<std::string, ParameterLoader::GeneratorParameters>& ParameterLoader::ge
 void ParameterLoader::save()
 {
 	YAML::Emitter out;
-
-	out << YAML::BeginMap;
-	for (auto& it : generator_params_)
-	{
-		out << YAML::Key << it.first;
-		out << YAML::Value;
-		emitGeneratorParams(out, it.second);
-	}
-	out << YAML::EndMap;
+	out << YAML::BeginMap << YAML::Key << "parameters";
+	out << YAML::Value;
+	emitGeneratorParams(out, generator_params_);
 
 	std::ofstream file(filename_);
 	file << out.c_str();
@@ -79,7 +73,7 @@ void ParameterLoader::emitNoiseParameters(YAML::Emitter& out, NoiseParameters& p
 	out << YAML::Key << "octaves" << YAML::Value << params.octaves;
 	out << YAML::Key << "gain" << YAML::Value << params.gain;
 	out << YAML::Key << "lacunarity" << YAML::Value << params.lacunarity;
-	out << YAML::Key << "celluar_distance" << YAML::Value << cellular_distance_function_[params.cellular_distance_function];
+	out << YAML::Key << "cellular_distance" << YAML::Value << cellular_distance_function_[params.cellular_distance_function];
 	out << YAML::Key << "cellular_return" << YAML::Value << cellular_return_type_[params.cellular_return_type];
 	out << YAML::Key << "cellular_jitter" << YAML::Value << params.cellular_jitter;
 	out << YAML::EndMap;
@@ -98,12 +92,13 @@ void ParameterLoader::emitColor(YAML::Emitter& out, float* color)
 
 void ParameterLoader::load(YAML::Node& node)
 {
-	for (auto it = node.begin(); it != node.end(); ++it)
+	if (node["parameters"])
 	{
-		auto key = it->first.as<std::string>();
-		auto params = loadGeneratorParams(it->second);
-
-		generator_params_[key] = params;
+		generator_params_ = loadGeneratorParams(node["parameters"]);
+	}
+	else
+	{
+		throw std::runtime_error("No root 'parameters' node");
 	}
 }
 

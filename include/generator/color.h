@@ -13,8 +13,13 @@ public:
 	float b;
 	float a;
 
-	Color(float r, float g, float b) :
-		r(r), g(g), b(b), a(1)
+    Color(float r, float g, float b, float a) :
+        r(r), g(g), b(b), a(a)
+    {
+
+    }
+
+	Color(float r, float g, float b) : Color(r, g, b, 1)
 	{
 	}
 
@@ -26,23 +31,6 @@ public:
 	{
 	}
 
-	/**
-		Expects sample to be in range [0,1]
-	*/
-	static Color from(float sample)
-	{
-		return Color(sample);
-	}
-
-	static Color from(float* colors)
-	{
-		Color p;
-		p.r = colors[0];
-		p.g = colors[1];
-		p.b = colors[2];
-		p.a = colors[3];
-		return p;
-	}
 
 	static Color from(const Color& a, const Color& b, float t)
 	{

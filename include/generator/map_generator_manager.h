@@ -3,6 +3,10 @@
 
 #include "generator/map_generator.h"
 #include "generator/generator_buffer_proxy.h"
+#include "script/script_engine.h"
+#include "script/generator_script.h"
+#include "script/parameters.h"
+#include "script/layers.h"
 
 #include <array>
 #include <chrono>
@@ -13,51 +17,53 @@
 class MapGeneratorManager
 {
 public:
-	using GeneratorList = std::vector<MapGenerator::Ptr>;
 	using LayerList = std::vector<GeneratorBuffer>;
 	using ProxyList = std::vector<GeneratorBufferProxy>;
 
-	MapGeneratorManager(GeneratorList& list, ParameterLoader::ParameterMap& parameter_map, int buffer_size) :
-		generators_(list),
+	MapGeneratorManager(ScriptEngine& engine, ParameterLoader::GeneratorParameters& parameter_list, int buffer_size) :
+        engine_(engine),
 		layers_(),
-		parameter_map_(parameter_map),
-		current_map_generator_(0),
+		parameter_list_(parameter_list),
 		current_layer(0),
 		buffer_width_(buffer_size),
 		buffer_height_(buffer_size),
 		update_ready_(false)
 	{
-		setCurrentGenerator(current_map_generator_);
+        // create generators
+        for (auto i = 0u; i < generators_.size(); ++i)
+        {
+            generators_[i] = engine.createGenerator();
+        }
+
+        // get layer names
+        layer_names_ = generators_[0]->getLayerNames();
+
+        // create layers
+        for (int i = 0; i < layer_names_.size(); ++i)
+        {
+            layers_.emplace_back(buffer_width_, buffer_height_);
+        }
 	}
 
 	void generate()
 	{
-		// get the current generator
-		auto& generator = generators_[current_map_generator_];
+        auto w = buffer_width_ / 2;
+        auto h = buffer_height_ / 2;
 
-		if (generator)
-		{
-			// reload parameters
-			generator->loadParams(parameter_map_[generator->getName()]);
+        auto t1 = startWorker(generators_[0], 0, 0, w, h);
+        auto t2 = startWorker(generators_[1], w, 0, w, h);
+        auto t3 = startWorker(generators_[2], 0, h, w, h);
+        auto t4 = startWorker(generators_[3], w, h, w, h);
 
-			auto w = buffer_width_ / 2;
-			auto h = buffer_height_ / 2;
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
 
-			auto t1 = startWorker(generator, 0, 0, w, h);
-			auto t2 = startWorker(generator, w, 0, w, h);
-			auto t3 = startWorker(generator, 0, h, w, h);
-			auto t4 = startWorker(generator, w, h, w, h);
-			
-			t1.join();
-			t2.join();
-			t3.join();
-			t4.join();
-		}
-
-		update_ready_ = true;
+        update_ready_ = true;
 	}
 
-	std::thread startWorker(MapGenerator::Ptr& ptr, int x, int y, int w, int h)
+	std::thread startWorker(GeneratorScript::Ptr& generator, int x, int y, int w, int h)
 	{
 		ProxyList proxies;
 
@@ -66,7 +72,10 @@ public:
 			proxies.emplace_back(buffer, x, y, w, h);
 		}
 
-		return std::thread(&MapGenerator::generate, ptr.get(), proxies);
+        Layers layers(proxies);
+        Parameters parameters(parameter_list_);
+
+		return std::thread(&GeneratorScript::generate, generator.get(), layers, parameters);
 	}
 
 	uint8_t* getBufferData()
@@ -85,55 +94,26 @@ public:
 		update_ready_ = ready;
 	}
 
-	const MapGenerator::Ptr& getCurrentMapGenerator() const
-	{
-		return generators_[current_map_generator_];
-	}
-
-	void setCurrentGenerator(int select)
-	{
-		current_map_generator_ = select;
-
-		// allocate layers
-		const auto num_layers = getCurrentLayerNames().size();
-		layers_.clear();
-		for (auto i = 0u; i < num_layers; ++i)
-		{
-			layers_.push_back(GeneratorBuffer(buffer_width_, buffer_height_));
-		}
-	}
-
 	void setCurrentLayer(int select)
 	{
 		current_layer = select;
 	}
 
-	std::vector<std::string> getGeneratorNames() const
+	const std::vector<std::string>& getCurrentLayerNames() const
 	{
-		std::vector<std::string> names;
-		for (const auto& generator : generators_)
-		{
-			names.push_back(generator->getName());
-		}
-
-		return names;
-	}
-
-	std::vector<std::string> getCurrentLayerNames() const
-	{
-		return generators_[current_map_generator_]->getLayerNames();
+		return layer_names_;
 	}
 
 private:
-	using clock = std::chrono::system_clock;
-
-	GeneratorList& generators_;
+    ScriptEngine & engine_;
 	LayerList layers_;
 	ProxyList proxies_;
+    std::vector<std::string> layer_names_;
 
-	ParameterLoader::ParameterMap& parameter_map_;
+    std::array<GeneratorScript::Ptr, 4> generators_;
 
-	int current_map_generator_;
+	ParameterLoader::GeneratorParameters& parameter_list_;
+
 	int current_layer;
 	int buffer_width_;
 	int buffer_height_;

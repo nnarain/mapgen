@@ -14,6 +14,8 @@ project(mapgen)
 find_package(OpenGL REQUIRED)
 find_package(SFML REQUIRED COMPONENTS system window graphics)
 
+find_package(Boost REQUIRED)
+
 add_subdirectory(src/external)
 
 include_directories(
@@ -21,6 +23,9 @@ include_directories(
     ${IMGUI_INCLUDE_DIRS}
     ${FASTNOISE_INCLUDE_DIRS}
     ${YAML_CPP_INCLUDE_DIR}
+    ${LUA_INCLUDE_DIRS}
+    ${LUABIND_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set(HEADERS
@@ -38,14 +43,15 @@ set(HEADERS
     include/generator/color.h
     include/generator/gradient.h
 
+    include/script/script_engine.h
+    include/script/generator_script.h
+    include/script/layers.h
+    include/script/parameters.h
+
     include/imgui_extension/imgui_extension.h
     include/utils/utils.h
 
     include/factory/fastnoise_factory.h
-
-    include/fastnoise_generator.h
-    include/terrain_generator.h
-    include/terrain2_generator.h
 )
 
 # Map Generator
@@ -54,6 +60,8 @@ add_executable(${PROJECT_NAME}
     src/parameters/parameter_loader.cpp
     src/imgui_extension/imgui_extension.cpp
 
+    src/script/script_engine.cpp
+
     ${HEADERS}
 )
 
@@ -61,6 +69,8 @@ target_link_libraries(${PROJECT_NAME}
 	imgui
     fastnoise
     yaml-cpp
+    lua
+    luabind
     ${SFML_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
 )

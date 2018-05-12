@@ -15,27 +15,22 @@
 
 class ParameterWindow : Window
 {
-	using ParameterMap = std::map<std::string, ParameterLoader::GeneratorParameters>;
 public:
-	ParameterWindow(ParameterMap& param_map) :
-		parameter_map_(param_map),
+	ParameterWindow(ParameterLoader::GeneratorParameters& param_map) :
+		parameter_list_(param_map),
 		opened_(false)
 	{
 
 	}
 
-	virtual bool update(std::string& current_map)
+	virtual bool update()
 	{
 		bool param_updated = false;
 
 		if (ImGui::Begin("Parameters", &opened_))
 		{
-			ImGui::Text(current_map.c_str());
-
-			auto& params = parameter_map_[current_map];
-
 			// iterate and display parameters
-			for (auto& it : params)
+			for (auto& it : parameter_list_)
 			{
 				auto& field_name = it.first;
 				auto& param_value = it.second;
@@ -64,7 +59,7 @@ public:
 			}
 
 			ImGui::Separator();
-			renderAddParameters(params);
+			renderAddParameters(parameter_list_);
 			ImGui::Separator();
 
 			if (ImGui::Button("Save"))
@@ -134,7 +129,7 @@ private:
 		bool param_updated = false;
 		param_updated = ImGui::Combo("Noise Type", &params.noise_type, noise_types, IM_ARRAYSIZE(noise_types)) || param_updated;
 		param_updated = ImGui::DragInt("seed", &params.seed) || param_updated;
-		param_updated = ImGui::DragFloat("frequency", &params.frequency, 0.01f) || param_updated;
+		param_updated = ImGui::DragFloat("frequency", &params.frequency, 0.001f) || param_updated;
 
 		auto type = params.noise_type;
 
@@ -159,13 +154,13 @@ private:
 				&params.cellular_distance_function, cellular_distance_function, IM_ARRAYSIZE(cellular_distance_function)) || param_updated;
 			param_updated = ImGui::Combo("Return Type",
 				&params.cellular_return_type, cellular_return_type, IM_ARRAYSIZE(cellular_return_type)) || param_updated;
-			param_updated = ImGui::InputFloat("jitter", &params.cellular_jitter) || param_updated;
+			param_updated = ImGui::DragFloat("jitter", &params.cellular_jitter, 0.001f) || param_updated;
 		}
 
 		return param_updated;
 	}
 
-	ParameterMap& parameter_map_;
+	ParameterLoader::GeneratorParameters& parameter_list_;
 	bool opened_;
 	std::function<void()> save_callback_;
 };
