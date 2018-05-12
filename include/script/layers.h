@@ -14,9 +14,9 @@ public:
 
     }
 
-    void set(int i, int x, int y, Color& c)
+    void set(int i, int x, int y, Color* c)
     {
-        proxies_[i].write(x, y, c);
+        proxies_[i].write(x, y, *c);
     }
 
     int startX() const

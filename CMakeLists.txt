@@ -46,6 +46,7 @@ set(HEADERS
     include/script/script_engine.h
     include/script/generator_script.h
     include/script/layers.h
+    include/script/parameters.h
 
     include/imgui_extension/imgui_extension.h
     include/utils/utils.h

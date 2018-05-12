@@ -1,5 +1,8 @@
 #include "script/script_engine.h"
 #include "script/layers.h"
+#include "script/parameters.h"
+
+#include <FastNoise.h>
 
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
@@ -14,6 +17,12 @@ ScriptEngine::ScriptEngine(const std::string& filename) :
 ScriptEngine::~ScriptEngine()
 {
 }
+
+struct A
+{
+    void f(int);
+    void f(int, int);
+};
 
 GeneratorScript::Ptr ScriptEngine::createGenerator()
 {
@@ -39,6 +48,11 @@ GeneratorScript::Ptr ScriptEngine::createGenerator()
             .def_readwrite("b", &Color::b)
             .def_readwrite("a", &Color::a),
 
+        class_<FastNoise>("Noise")
+            .def("sample",    (float(FastNoise::*)(float, float) const)&FastNoise::GetNoise)
+            .def("sample",    (float(FastNoise::*)(float, float, float) const)&FastNoise::GetNoise)
+            .def("setLookup", &FastNoise::SetCellularNoiseLookup),
+
         class_<Layers>("Layers")
             .def("set",    &Layers::set)
             .def("startX", &Layers::startX)
@@ -46,7 +60,12 @@ GeneratorScript::Ptr ScriptEngine::createGenerator()
             .def("endX",   &Layers::endX)
             .def("endY",   &Layers::endY)
             .def("width",  &Layers::getWidth)
-            .def("height", &Layers::getHeight)
+            .def("height", &Layers::getHeight),
+
+        class_<Parameters>("Parameters")
+            .def("getNoise", &Parameters::getNoise)
+            .def("getColor", &Parameters::getColor)
+            .def("getFloat", &Parameters::getFloat)
     ];
 
     // load the file

@@ -5,6 +5,8 @@
 #include "generator/generator_buffer_proxy.h"
 #include "script/script_engine.h"
 #include "script/generator_script.h"
+#include "script/parameters.h"
+#include "script/layers.h"
 
 #include <array>
 #include <chrono>
@@ -18,22 +20,25 @@ public:
 	using LayerList = std::vector<GeneratorBuffer>;
 	using ProxyList = std::vector<GeneratorBufferProxy>;
 
-	MapGeneratorManager(ScriptEngine& engine, ParameterLoader::GeneratorParameters& parameter_map, int buffer_size) :
+	MapGeneratorManager(ScriptEngine& engine, ParameterLoader::GeneratorParameters& parameter_list, int buffer_size) :
         engine_(engine),
 		layers_(),
-		parameter_list_(parameter_map),
+		parameter_list_(parameter_list),
 		current_layer(0),
 		buffer_width_(buffer_size),
 		buffer_height_(buffer_size),
 		update_ready_(false)
 	{
+        // create generators
         for (auto i = 0u; i < generators_.size(); ++i)
         {
             generators_[i] = engine.createGenerator();
         }
 
+        // get layer names
         layer_names_ = generators_[0]->getLayerNames();
 
+        // create layers
         for (int i = 0; i < layer_names_.size(); ++i)
         {
             layers_.emplace_back(buffer_width_, buffer_height_);
@@ -68,8 +73,9 @@ public:
 		}
 
         Layers layers(proxies);
+        Parameters parameters(parameter_list_);
 
-		return std::thread(&GeneratorScript::generate, generator.get(), layers);
+		return std::thread(&GeneratorScript::generate, generator.get(), layers, parameters);
 	}
 
 	uint8_t* getBufferData()

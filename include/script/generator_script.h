@@ -2,6 +2,7 @@
 #define SCRIPT_GENERATOR_SCRIPT_H
 
 #include "script/layers.h"
+#include "script/parameters.h"
 
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
@@ -27,11 +28,11 @@ public:
         lua_close(L_);
     }
 
-    void generate(Layers layers)
+    void generate(Layers layers, Parameters parameters)
     {
         try
         {
-            luabind::call_function<void>(L_, "generate", &layers);
+            luabind::call_function<void>(L_, "generate", &layers, &parameters);
         }
         catch (luabind::error& e)
         {
