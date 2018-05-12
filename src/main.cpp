@@ -12,11 +12,6 @@
 #include "generator/map_generator_manager.h"
 #include "script/script_engine.h"
 
-#include "fastnoise_generator.h"
-#include "terrain_generator.h"
-#include "terrain2_generator.h"
-#include "mountain_generator.h"
-
 #include <iostream>
 
 static const int BUFFER_SIZE = 512;
@@ -29,74 +24,79 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	// Load parameters
-	const std::string param_file(argv[2]);
-	ParameterLoader loader(param_file);
-	auto& parameters = loader.getParams();
+    try
+    {
+        // Load parameters
+        const std::string param_file(argv[2]);
+        ParameterLoader loader(param_file);
+        auto& parameters = loader.getParams();
 
-    std::string script = std::string(argv[1]);
-    ScriptEngine engine(script);
+        std::string script = std::string(argv[1]);
+        ScriptEngine engine(script);
 
-	MapGeneratorManager generator_manager(engine, parameters, BUFFER_SIZE);
+        MapGeneratorManager generator_manager(engine, parameters, BUFFER_SIZE);
 
-	// Create ui components
-	ParameterWindow parameter_window(parameters);
-	parameter_window.setSaveCallback([&] {
-		loader.save();
-	});
+        // Create ui components
+        ParameterWindow parameter_window(parameters);
+        parameter_window.setSaveCallback([&] {
+            loader.save();
+        });
 
-	MapDisplayWindow map_display_window(generator_manager, BUFFER_SIZE);
+        MapDisplayWindow map_display_window(generator_manager, BUFFER_SIZE);
 
-	// Init SFML
-	sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
-	window.setFramerateLimit(60);
-	ImGui::SFML::Init(window);
+        // Init SFML
+        sf::RenderWindow window(sf::VideoMode(1080, 720), "Map Generator");
+        window.setFramerateLimit(60);
+        ImGui::SFML::Init(window);
 
-	sf::Clock deltaClock;
-	bool first_pass = true;
+        sf::Clock deltaClock;
+        bool first_pass = true;
 
-	while (window.isOpen()) 
-	{
-		// poll events
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			// pass events to imgui
-			ImGui::SFML::ProcessEvent(event);
+        while (window.isOpen())
+        {
+            // poll events
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                // pass events to imgui
+                ImGui::SFML::ProcessEvent(event);
 
-			if (event.type == sf::Event::Closed)
-			{
-				window.close();
-			}
-		}
+                if (event.type == sf::Event::Closed)
+                {
+                    window.close();
+                }
+            }
 
-		// update imgui
-		ImGui::SFML::Update(window, deltaClock.restart());
-		
-		// draw gui
-		bool params_updated = parameter_window.update();
+            // update imgui
+            ImGui::SFML::Update(window, deltaClock.restart());
 
-		if (params_updated || first_pass)
-		{
-			generator_manager.generate();
-			first_pass = false;
-		}
+            // draw gui
+            bool params_updated = parameter_window.update();
 
-		map_display_window.update();
+            if (params_updated || first_pass)
+            {
+                generator_manager.generate();
+                first_pass = false;
+            }
 
-		if (generator_manager.isUpdateReady())
-		{
-			map_display_window.updateTexture(static_cast<sf::Uint8*>(generator_manager.getBufferData()));
-		}
+            map_display_window.update();
 
-		//ImGui::ShowDemoWindow();
+            if (generator_manager.isUpdateReady())
+            {
+                map_display_window.updateTexture(static_cast<sf::Uint8*>(generator_manager.getBufferData()));
+            }
 
-		// re-draw the screen
-		window.clear(sf::Color(128, 128, 128, 255));
-		ImGui::SFML::Render(window);
-		window.display();
-	}
-
+            // re-draw the screen
+            window.clear(sf::Color(128, 128, 128, 255));
+            ImGui::SFML::Render(window);
+            window.display();
+        }
+    }
+    catch (std::runtime_error& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+    
 	ImGui::SFML::Shutdown();
 
 	return 0;

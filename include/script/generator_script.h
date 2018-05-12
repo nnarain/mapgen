@@ -39,6 +39,10 @@ public:
             std::string error = lua_tostring(e.state(), -1);
             std::cout << error << std::endl;
         }
+        catch (std::exception& e)
+        {
+            std::cout << e.what() << std::endl;
+        }
     }
 
     std::vector<std::string> getLayerNames()

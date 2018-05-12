@@ -42,7 +42,10 @@ GeneratorScript::Ptr ScriptEngine::createGenerator()
             .def_readwrite("r", &Color::r)
             .def_readwrite("g", &Color::g)
             .def_readwrite("b", &Color::b)
-            .def_readwrite("a", &Color::a),
+            .def_readwrite("a", &Color::a)
+            .scope[
+                def("from", &Color::from)
+            ],
 
         class_<FastNoise>("Noise")
             .def("sample",    (float(FastNoise::*)(float, float) const)&FastNoise::GetNoise)
@@ -70,7 +73,11 @@ GeneratorScript::Ptr ScriptEngine::createGenerator()
     ];
 
     // load the file
-    luaL_dofile(L, script_.c_str());
+    if (luaL_dofile(L, script_.c_str()))
+    {
+        auto error = std::string(lua_tostring(L, -1));
+        throw std::runtime_error(error);
+    }
 
     // grab file metadata...
 
