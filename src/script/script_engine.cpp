@@ -2,6 +2,8 @@
 #include "script/layers.h"
 #include "script/parameters.h"
 
+#include "utils/utils.h"
+
 #include <FastNoise.h>
 
 #include <lua.hpp>
@@ -17,12 +19,6 @@ ScriptEngine::ScriptEngine(const std::string& filename) :
 ScriptEngine::~ScriptEngine()
 {
 }
-
-struct A
-{
-    void f(int);
-    void f(int, int);
-};
 
 GeneratorScript::Ptr ScriptEngine::createGenerator()
 {
@@ -66,6 +62,11 @@ GeneratorScript::Ptr ScriptEngine::createGenerator()
             .def("getNoise", &Parameters::getNoise)
             .def("getColor", &Parameters::getColor)
             .def("getFloat", &Parameters::getFloat)
+    ];
+
+    module(L, "utils")[
+        def("range", &utils::range<float>),
+        def("lerp", &utils::lerp<float>)
     ];
 
     // load the file
