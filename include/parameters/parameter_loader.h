@@ -23,7 +23,7 @@ public:
 
 	void save();
 
-	ParameterMap& getParams();
+	GeneratorParameters& getParams();
 
 private:
 	std::array<std::string, 10> noise_types_;
@@ -60,7 +60,7 @@ private:
 		}
 	}
 
-	ParameterMap generator_params_;
+	GeneratorParameters generator_params_;
 	std::string filename_;
 };
 

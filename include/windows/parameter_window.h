@@ -15,27 +15,22 @@
 
 class ParameterWindow : Window
 {
-	using ParameterMap = std::map<std::string, ParameterLoader::GeneratorParameters>;
 public:
-	ParameterWindow(ParameterMap& param_map) :
-		parameter_map_(param_map),
+	ParameterWindow(ParameterLoader::GeneratorParameters& param_map) :
+		parameter_list_(param_map),
 		opened_(false)
 	{
 
 	}
 
-	virtual bool update(std::string& current_map)
+	virtual bool update()
 	{
 		bool param_updated = false;
 
 		if (ImGui::Begin("Parameters", &opened_))
 		{
-			ImGui::Text(current_map.c_str());
-
-			auto& params = parameter_map_[current_map];
-
 			// iterate and display parameters
-			for (auto& it : params)
+			for (auto& it : parameter_list_)
 			{
 				auto& field_name = it.first;
 				auto& param_value = it.second;
@@ -64,7 +59,7 @@ public:
 			}
 
 			ImGui::Separator();
-			renderAddParameters(params);
+			renderAddParameters(parameter_list_);
 			ImGui::Separator();
 
 			if (ImGui::Button("Save"))
@@ -165,7 +160,7 @@ private:
 		return param_updated;
 	}
 
-	ParameterMap& parameter_map_;
+	ParameterLoader::GeneratorParameters& parameter_list_;
 	bool opened_;
 	std::function<void()> save_callback_;
 };

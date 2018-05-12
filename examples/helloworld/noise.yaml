@@ -1,0 +1,13 @@
+parameters:
+  mynoise:
+    noise_type: simplex_fractal
+    fractal_type: fbm
+    interp_type: quintic
+    seed: 0
+    frequency: 0.01
+    octaves: 0
+    gain: 0.5
+    lacunarity: 2
+    cellular_distance: euclidean
+    cellular_return: cellvalue
+    cellular_jitter: 0.45
